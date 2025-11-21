@@ -55,15 +55,14 @@ function setupHeaders(sheet) {
   const headers = [
     // Basic Info
     'Timestamp',
-    'Submission ID',
     'User Type',
 
-    // Current Users Only
+    // Current Users Path
     'System Name',
     'Usage Duration',
     'Overall Satisfaction',
 
-    // Ratings - All 14 Competing Factors
+    // Ratings - All 14 Competing Factors (in survey order)
     'Rating: Affordability',
     'Rating: ROI Financial',
     'Rating: Emotional ROI',
@@ -83,36 +82,14 @@ function setupHeaders(sheet) {
     'Other Important Factors',
     'Biggest Challenge',
 
-    // Non-Users Only
+    // Non-Users Path
     'Awareness of Systems',
     'Considered Purchase',
+    'Reasons Not Purchased',
+    'Other Reasons',
     'Not Interested Reason',
-
-    // Reasons Not Purchased (Separate Columns)
-    'Reason: Too expensive',
-    'Reason: Takes up too much space',
-    'Reason: Seems complicated',
-    'Reason: Not worth the effort',
-    'Reason: Can buy produce cheaper',
-    'Reason: Poor reviews',
-    'Reason: Don\'t like subscription model',
-    'Reason: Limited plant variety',
-    'Other Reasons (Text)',
-
-    // Non-Users - Open Text
     'What Would Make You Buy',
-
-    // Demographics (Separate Columns)
-    'Demo: Health conscious',
-    'Demo: Fitness enthusiast',
-    'Demo: Bio-hacker',
-    'Demo: Parent with kids',
-    'Demo: Sustainability focused',
-    'Demo: Chronic health condition',
-    'Demo: Hobbyist gardener',
-    'Demo: Tech enthusiast',
-    'Demo: Mushroom cultivator',
-    'Demo: None',
+    'Demographics',
 
     // Metadata
     'Completed At',
@@ -141,15 +118,14 @@ function prepareRowData(data) {
     return data.ratings && data.ratings[key] ? data.ratings[key] : '';
   };
 
-  // Helper function to check if option is selected
-  const isSelected = (array, value) => {
-    return array && array.includes(value) ? 'Yes' : '';
+  // Helper function to join array into comma-separated string
+  const joinArray = (array) => {
+    return array && array.length > 0 ? array.join(', ') : '';
   };
 
   const row = [
     // Basic Info
     new Date(),
-    Utilities.getUuid(),
     data.userType || '',
 
     // Current Users Only
@@ -157,7 +133,7 @@ function prepareRowData(data) {
     data.usage_duration || '',
     data.satisfaction || '',
 
-    // Ratings - All 14 Competing Factors
+    // Ratings - All 14 Competing Factors (in survey order)
     getRating('affordability') || getRating('affordability_b'),
     getRating('roi_financial') || getRating('roi_financial_b'),
     getRating('emotional_roi') || getRating('emotional_roi_b'),
@@ -180,33 +156,11 @@ function prepareRowData(data) {
     // Non-Users Only
     data.awareness || '',
     data.considered || '',
-    data.not_interested_reason || '',
-
-    // Reasons Not Purchased (Separate Columns)
-    isSelected(data.selectedReasons, 'Too expensive'),
-    isSelected(data.selectedReasons, 'Takes up too much space'),
-    isSelected(data.selectedReasons, 'Seems complicated'),
-    isSelected(data.selectedReasons, 'Not worth the effort'),
-    isSelected(data.selectedReasons, 'Can buy produce cheaper'),
-    isSelected(data.selectedReasons, 'Poor reviews'),
-    isSelected(data.selectedReasons, 'Subscription model'),
-    isSelected(data.selectedReasons, 'Limited plant variety'),
+    joinArray(data.selectedReasons),
     data.otherReasons || '',
-
-    // Non-Users - Open Text
+    data.not_interested_reason || '',
     data.wouldMakeBuy || '',
-
-    // Demographics (Separate Columns)
-    isSelected(data.selectedDemographics, 'Health conscious'),
-    isSelected(data.selectedDemographics, 'Fitness enthusiast'),
-    isSelected(data.selectedDemographics, 'Bio-hacker'),
-    isSelected(data.selectedDemographics, 'Parent'),
-    isSelected(data.selectedDemographics, 'Sustainability focused'),
-    isSelected(data.selectedDemographics, 'Chronic condition'),
-    isSelected(data.selectedDemographics, 'Hobbyist gardener'),
-    isSelected(data.selectedDemographics, 'Tech enthusiast'),
-    isSelected(data.selectedDemographics, 'Mushroom cultivator'),
-    isSelected(data.selectedDemographics, 'None'),
+    joinArray(data.selectedDemographics),
 
     // Metadata
     data.completedAt || '',
@@ -241,11 +195,12 @@ function testSetup() {
     otherFactors: 'Test other factors',
     biggestChallenge: 'Test challenge',
     completedAt: new Date().toISOString(),
-    navigationPath: [0, 1, '2a', '3a']
+    navigationPath: [0, 1, '2a', '3a', '4a']
   };
 
   const row = prepareRowData(testData);
   sheet.appendRow(row);
 
   Logger.log('Test data added successfully!');
+  Logger.log('Check your sheet - you should see comma-separated values for multi-choice answers!');
 }
