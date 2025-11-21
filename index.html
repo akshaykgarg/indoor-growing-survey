@@ -665,6 +665,13 @@
     </div>
 
     <script>
+        // ==========================================
+        // CONFIGURATION
+        // ==========================================
+        // Replace this URL with your Google Apps Script Web App URL
+        // Instructions: See SETUP-INSTRUCTIONS.md
+        const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
         // Survey data storage
         let surveyData = {
             timestamp: new Date().toISOString(),
@@ -827,27 +834,78 @@
             document.getElementById('progressBar').style.width = progress + '%';
         }
 
-        function submitSurvey() {
+        async function submitSurvey() {
             saveCurrentSectionInputs();
             surveyData.completedAt = new Date().toISOString();
             surveyData.navigationPath = navigationHistory;
 
-            // Save to localStorage
+            // Show loading message
+            showLoadingMessage();
+
+            // Save to localStorage as backup
             const existingData = JSON.parse(localStorage.getItem('surveyResponses') || '[]');
             existingData.push(surveyData);
             localStorage.setItem('surveyResponses', JSON.stringify(existingData));
 
-            // Show completion message
-            showCompletionMessage();
+            // Send to Google Sheets
+            if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                try {
+                    const response = await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors', // Google Apps Script requires this
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(surveyData)
+                    });
+
+                    // Note: With no-cors mode, we can't read the response
+                    // But if we get here, the request was sent
+                    console.log('Data sent to Google Sheets');
+                    showCompletionMessage(true);
+                } catch (error) {
+                    console.error('Error sending to Google Sheets:', error);
+                    showCompletionMessage(false, error.message);
+                }
+            } else {
+                // No Google Sheets configured, just use localStorage
+                showCompletionMessage(false, 'Google Sheets not configured');
+            }
         }
 
-        function showCompletionMessage() {
+        function showLoadingMessage() {
             const content = document.getElementById('surveyContent');
+            content.innerHTML = `
+                <div class="completion-message">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; border: 6px solid #e2e8f0; border-top-color: #667eea; margin: 0 auto 20px; animation: spin 1s linear infinite;"></div>
+                    <h2 style="color: #2d3748;">Submitting...</h2>
+                    <p>Saving your responses</p>
+                </div>
+                <style>
+                    @keyframes spin {
+                        to { transform: rotate(360deg); }
+                    }
+                </style>
+            `;
+        }
+
+        function showCompletionMessage(sentToSheets = false, errorMessage = '') {
+            const content = document.getElementById('surveyContent');
+
+            let statusMessage = '';
+            if (sentToSheets) {
+                statusMessage = '<p>✅ Your response has been saved to Google Sheets!</p>';
+            } else if (errorMessage && errorMessage !== 'Google Sheets not configured') {
+                statusMessage = `<p>⚠️ Your response was saved locally but couldn't be sent to Google Sheets.</p><p style="font-size: 14px; color: #718096; margin-top: 10px;">Error: ${errorMessage}</p>`;
+            } else {
+                statusMessage = '<p>Your response has been saved locally.</p>';
+            }
+
             content.innerHTML = `
                 <div class="completion-message">
                     <div class="checkmark"></div>
                     <h2>Thank You!</h2>
-                    <p>Your responses have been saved successfully.</p>
+                    ${statusMessage}
                     <p style="margin-top: 15px;">Your feedback is invaluable in helping us understand the needs of indoor growing enthusiasts.</p>
                     <button class="download-btn" onclick="downloadData()">Download My Responses</button>
                     <button class="secondary-btn" onclick="location.reload()">Take Survey Again</button>
