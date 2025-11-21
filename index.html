@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indoor Growing Systems Survey</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .question-section {
+            display: none;
+            animation: slideIn 0.4s ease;
+        }
+
+        .question-section.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .question {
+            margin-bottom: 25px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .question-subtext {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 15px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .secondary-btn {
+            background: #48bb78;
+        }
+
+        .secondary-btn:hover {
+            background: #38a169;
+            box-shadow: 0 5px 15px rgba(72, 187, 120, 0.4);
+        }
+
+        .rating-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .rating-item {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .rating-label {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .rating-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .rating-btn {
+            width: 45px;
+            height: 45px;
+            padding: 0;
+            min-width: 0;
+            flex: 0;
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+            font-weight: 700;
+        }
+
+        .rating-btn:hover {
+            background: #edf2f7;
+            transform: scale(1.1);
+        }
+
+        .rating-btn.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea.text-input {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.4s ease;
+            border-radius: 10px;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .back-btn {
+            background: #cbd5e0;
+            color: #2d3748;
+        }
+
+        .back-btn:hover {
+            background: #a0aec0;
+            box-shadow: 0 5px 15px rgba(160, 174, 192, 0.4);
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .completion-message h2 {
+            color: #48bb78;
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .completion-message p {
+            color: #718096;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #48bb78;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        .checkmark::after {
+            content: '✓';
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .download-btn {
+            background: #805ad5;
+            margin-top: 20px;
+        }
+
+        .download-btn:hover {
+            background: #6b46c1;
+            box-shadow: 0 5px 15px rgba(128, 90, 213, 0.4);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .rating-buttons {
+                justify-content: center;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <div id="surveyContent">
+            <h1>Indoor Growing Systems Survey</h1>
+            <p class="subtitle">Help us understand your experience with indoor growing systems</p>
+
+            <!-- Section 0: Welcome -->
+            <div class="question-section active" id="section0">
+                <div class="question">
+                    <p class="question-text">Thank you for taking the time to share your insights!</p>
+                    <p class="question-subtext">This survey takes about 3-5 minutes. Your responses will help us understand the needs and experiences of both users and potential users of indoor growing systems.</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="nextSection(1)" class="secondary-btn">Start Survey</button>
+                </div>
+            </div>
+
+            <!-- Section 1: Primary Question -->
+            <div class="question-section" id="section1">
+                <div class="question">
+                    <p class="question-text">Do you currently use an indoor growing unit or smart growing system for plants?</p>
+                    <p class="question-subtext">This includes any automated or semi-automated system like Gardyn, Lettuce Grow, AeroGarden, Click & Grow, or similar products.</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="userTypeSelection('yes')">Yes, I use one</button>
+                    <button onclick="userTypeSelection('no')">No, I don't</button>
+                </div>
+            </div>
+
+            <!-- Section 2a: Current Users - Which System -->
+            <div class="question-section" id="section2a">
+                <div class="question">
+                    <p class="question-text">Which system do you currently use?</p>
+                    <input type="text" class="text-input" id="systemName" placeholder="e.g., Gardyn, Lettuce Grow, AeroGarden, DIY system, etc.">
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                    <button onclick="nextSection('3a')">Next</button>
+                </div>
+            </div>
+
+            <!-- Section 3a: How long using -->
+            <div class="question-section" id="section3a">
+                <div class="question">
+                    <p class="question-text">How long have you been using your indoor growing system?</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="saveAnswer('usage_duration', 'Less than 3 months'); nextSection('4a')">Less than 3 months</button>
+                    <button onclick="saveAnswer('usage_duration', '3-6 months'); nextSection('4a')">3-6 months</button>
+                    <button onclick="saveAnswer('usage_duration', '6-12 months'); nextSection('4a')">6-12 months</button>
+                    <button onclick="saveAnswer('usage_duration', 'More than 1 year'); nextSection('4a')">More than 1 year</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                </div>
+            </div>
+
+            <!-- Section 4a: Overall Satisfaction -->
+            <div class="question-section" id="section4a">
+                <div class="question">
+                    <p class="question-text">Overall, how satisfied are you with your indoor growing system?</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="saveAnswer('satisfaction', 'Very satisfied'); nextSection('5a')">Very satisfied</button>
+                    <button onclick="saveAnswer('satisfaction', 'Satisfied'); nextSection('5a')">Satisfied</button>
+                    <button onclick="saveAnswer('satisfaction', 'Neutral'); nextSection('5a')">Neutral</button>
+                    <button onclick="saveAnswer('satisfaction', 'Dissatisfied'); nextSection('5a')">Dissatisfied</button>
+                    <button onclick="saveAnswer('satisfaction', 'Very dissatisfied'); nextSection('5a')">Very dissatisfied</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                </div>
+            </div>
+
+            <!-- Section 5a: Rate Competing Factors -->
+            <div class="question-section" id="section5a">
+                <div class="question">
+                    <p class="question-text">How important are the following factors to you?</p>
+                    <p class="question-subtext">Rate each factor from 1 (Not Important) to 10 (Extremely Important)</p>
+                </div>
+                <div class="rating-grid">
+                    <div class="rating-item">
+                        <label class="rating-label">Affordability (Initial Cost)</label>
+                        <div class="rating-buttons" id="affordability"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">ROI - Financial Return (Cost savings vs grocery store)</label>
+                        <div class="rating-buttons" id="roi_financial"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Emotional ROI (Joy, satisfaction, learning experience)</label>
+                        <div class="rating-buttons" id="emotional_roi"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Time to Harvest (How quickly you get results)</label>
+                        <div class="rating-buttons" id="time_to_harvest"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Agricultural Knowledge Required (Ease for beginners)</label>
+                        <div class="rating-buttons" id="knowledge_required"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Ease of Use (Daily maintenance effort)</label>
+                        <div class="rating-buttons" id="ease_of_use"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Space Utilization (Footprint vs output)</label>
+                        <div class="rating-buttons" id="space_utilization"></div>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                    <button onclick="nextSection('6a')">Next</button>
+                </div>
+            </div>
+
+            <!-- Section 6a: More Competing Factors -->
+            <div class="question-section" id="section6a">
+                <div class="question">
+                    <p class="question-text">Continue rating these factors...</p>
+                    <p class="question-subtext">Rate from 1 (Not Important) to 10 (Extremely Important)</p>
+                </div>
+                <div class="rating-grid">
+                    <div class="rating-item">
+                        <label class="rating-label">Variety of Produce (Different plants you can grow)</label>
+                        <div class="rating-buttons" id="variety_of_produce"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Automation & AI Features</label>
+                        <div class="rating-buttons" id="automation_ai"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Management Software & App Quality</label>
+                        <div class="rating-buttons" id="management_software"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Aesthetics (How it looks in your home)</label>
+                        <div class="rating-buttons" id="aesthetics"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Sustainability (Environmental impact)</label>
+                        <div class="rating-buttons" id="sustainability"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Produce Quality & Nutrition</label>
+                        <div class="rating-buttons" id="produce_quality"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Range of Inputs & Tech Offered (Customization options)</label>
+                        <div class="rating-buttons" id="tech_range"></div>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                    <button onclick="nextSection('7a')">Next</button>
+                </div>
+            </div>
+
+            <!-- Section 7a: What else matters -->
+            <div class="question-section" id="section7a">
+                <div class="question">
+                    <p class="question-text">What other factors are important to you that we didn't mention?</p>
+                    <textarea class="text-input" id="otherFactors" placeholder="Please share any other important considerations..."></textarea>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                    <button onclick="nextSection('8a')">Next</button>
+                </div>
+            </div>
+
+            <!-- Section 8a: Main challenge -->
+            <div class="question-section" id="section8a">
+                <div class="question">
+                    <p class="question-text">What's the biggest challenge you face with your current system?</p>
+                    <textarea class="text-input" id="biggestChallenge" placeholder="Share your main pain point..."></textarea>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                    <button onclick="submitSurvey()">Submit Survey</button>
+                </div>
+            </div>
+
+            <!-- Section 2b: Non-Users - Aware of systems -->
+            <div class="question-section" id="section2b">
+                <div class="question">
+                    <p class="question-text">Are you aware that indoor smart growing systems exist?</p>
+                    <p class="question-subtext">Systems like Gardyn, Lettuce Grow, AeroGarden that automate indoor plant growing.</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="saveAnswer('awareness', 'Yes'); nextSection('3b')">Yes, I know about them</button>
+                    <button onclick="saveAnswer('awareness', 'No'); nextSection('3b')">No, this is new to me</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                </div>
+            </div>
+
+            <!-- Section 3b: Have you considered -->
+            <div class="question-section" id="section3b">
+                <div class="question">
+                    <p class="question-text">Have you ever considered getting an indoor growing system?</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="saveAnswer('considered', 'Yes, seriously considered'); nextSection('4b')">Yes, seriously considered it</button>
+                    <button onclick="saveAnswer('considered', 'Yes, briefly thought about it'); nextSection('4b')">Yes, briefly thought about it</button>
+                    <button onclick="saveAnswer('considered', 'No, never'); nextSection('5b')">No, never considered it</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                </div>
+            </div>
+
+            <!-- Section 4b: Why didn't you purchase -->
+            <div class="question-section" id="section4b">
+                <div class="question">
+                    <p class="question-text">What stopped you from purchasing one?</p>
+                    <p class="question-subtext">Select all that apply, or write your own reason below.</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="toggleReason('Too expensive')">Too expensive</button>
+                    <button onclick="toggleReason('Takes up too much space')">Takes up too much space</button>
+                    <button onclick="toggleReason('Seems complicated')">Seems complicated</button>
+                    <button onclick="toggleReason('Not worth the effort')">Not worth the effort</button>
+                    <button onclick="toggleReason('Can buy produce cheaper')">Can buy produce cheaper</button>
+                    <button onclick="toggleReason('Poor reviews')">Poor reviews</button>
+                    <button onclick="toggleReason('Subscription model')">Don't like subscription model</button>
+                    <button onclick="toggleReason('Limited plant variety')">Limited plant variety</button>
+                </div>
+                <div class="question">
+                    <textarea class="text-input" id="otherReasons" placeholder="Any other reasons?"></textarea>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                    <button onclick="nextSection('6b')">Next</button>
+                </div>
+            </div>
+
+            <!-- Section 5b: Why not interested -->
+            <div class="question-section" id="section5b">
+                <div class="question">
+                    <p class="question-text">What's the main reason you've never considered an indoor growing system?</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="saveAnswer('not_interested_reason', 'Don\'t grow any plants'); nextSection('6b')">I don't grow any plants</button>
+                    <button onclick="saveAnswer('not_interested_reason', 'Have outdoor garden'); nextSection('6b')">I have an outdoor garden</button>
+                    <button onclick="saveAnswer('not_interested_reason', 'No interest in growing food'); nextSection('6b')">No interest in growing my own food</button>
+                    <button onclick="saveAnswer('not_interested_reason', 'Didn\'t know existed'); nextSection('6b')">Didn't know these existed</button>
+                    <button onclick="saveAnswer('not_interested_reason', 'Other'); nextSection('6b')">Other reason</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                </div>
+            </div>
+
+            <!-- Section 6b: What would you value -->
+            <div class="question-section" id="section6b">
+                <div class="question">
+                    <p class="question-text">If you were to consider an indoor growing system, how important would these factors be?</p>
+                    <p class="question-subtext">Rate from 1 (Not Important) to 10 (Extremely Important)</p>
+                </div>
+                <div class="rating-grid">
+                    <div class="rating-item">
+                        <label class="rating-label">Affordability (Initial Cost)</label>
+                        <div class="rating-buttons" id="affordability_b"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">ROI - Financial Return (Cost savings vs grocery store)</label>
+                        <div class="rating-buttons" id="roi_financial_b"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Emotional ROI (Joy, satisfaction, learning experience)</label>
+                        <div class="rating-buttons" id="emotional_roi_b"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Time to Harvest</label>
+                        <div class="rating-buttons" id="time_to_harvest_b"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Ease of Use (Must be effortless)</label>
+                        <div class="rating-buttons" id="ease_of_use_b"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Space Utilization</label>
+                        <div class="rating-buttons" id="space_utilization_b"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Variety of Produce</label>
+                        <div class="rating-buttons" id="variety_of_produce_b"></div>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                    <button onclick="nextSection('7b')">Next</button>
+                </div>
+            </div>
+
+            <!-- Section 7b: More factors -->
+            <div class="question-section" id="section7b">
+                <div class="question">
+                    <p class="question-text">Continue rating these factors...</p>
+                    <p class="question-subtext">Rate from 1 (Not Important) to 10 (Extremely Important)</p>
+                </div>
+                <div class="rating-grid">
+                    <div class="rating-item">
+                        <label class="rating-label">Automation & AI Features</label>
+                        <div class="rating-buttons" id="automation_ai_b"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Management Software & App</label>
+                        <div class="rating-buttons" id="management_software_b"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Aesthetics (Looks good in home)</label>
+                        <div class="rating-buttons" id="aesthetics_b"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Sustainability</label>
+                        <div class="rating-buttons" id="sustainability_b"></div>
+                    </div>
+                    <div class="rating-item">
+                        <label class="rating-label">Produce Quality & Nutrition</label>
+                        <div class="rating-buttons" id="produce_quality_b"></div>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                    <button onclick="nextSection('8b')">Next</button>
+                </div>
+            </div>
+
+            <!-- Section 8b: What would make you buy -->
+            <div class="question-section" id="section8b">
+                <div class="question">
+                    <p class="question-text">What would make you consider purchasing an indoor growing system?</p>
+                    <textarea class="text-input" id="wouldMakeBuy" placeholder="What features, price point, or changes would interest you?"></textarea>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                    <button onclick="nextSection('9b')">Next</button>
+                </div>
+            </div>
+
+            <!-- Section 9b: Demographics -->
+            <div class="question-section" id="section9b">
+                <div class="question">
+                    <p class="question-text">What best describes your current situation?</p>
+                    <p class="question-subtext">Select all that apply</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="toggleDemographic('Health conscious')">Health conscious individual</button>
+                    <button onclick="toggleDemographic('Fitness enthusiast')">Fitness enthusiast</button>
+                    <button onclick="toggleDemographic('Bio-hacker')">Bio-hacker/Supplement user</button>
+                    <button onclick="toggleDemographic('Parent')">Parent with kids</button>
+                    <button onclick="toggleDemographic('Sustainability focused')">Sustainability focused</button>
+                    <button onclick="toggleDemographic('Chronic condition')">Managing chronic health condition</button>
+                    <button onclick="toggleDemographic('Hobbyist gardener')">Hobbyist gardener</button>
+                    <button onclick="toggleDemographic('Tech enthusiast')">Tech enthusiast</button>
+                    <button onclick="toggleDemographic('Mushroom cultivator')">Mushroom cultivator</button>
+                    <button onclick="toggleDemographic('None')">None of these</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                    <button onclick="submitSurvey()">Submit Survey</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Survey data storage
+        let surveyData = {
+            timestamp: new Date().toISOString(),
+            userType: '',
+            ratings: {},
+            selectedReasons: [],
+            selectedDemographics: [],
+            navigation: []
+        };
+
+        let currentSection = 0;
+        let navigationHistory = [0];
+
+        // Initialize rating buttons
+        function initRatingButtons() {
+            const ratingIds = [
+                'affordability', 'roi_financial', 'emotional_roi', 'time_to_harvest',
+                'knowledge_required', 'ease_of_use', 'space_utilization', 'variety_of_produce',
+                'automation_ai', 'management_software', 'aesthetics', 'sustainability',
+                'produce_quality', 'tech_range',
+                'affordability_b', 'roi_financial_b', 'emotional_roi_b', 'time_to_harvest_b',
+                'ease_of_use_b', 'space_utilization_b', 'variety_of_produce_b',
+                'automation_ai_b', 'management_software_b', 'aesthetics_b',
+                'sustainability_b', 'produce_quality_b'
+            ];
+
+            ratingIds.forEach(id => {
+                const container = document.getElementById(id);
+                if (container) {
+                    for (let i = 1; i <= 10; i++) {
+                        const btn = document.createElement('button');
+                        btn.className = 'rating-btn';
+                        btn.textContent = i;
+                        btn.onclick = function(e) {
+                            e.preventDefault();
+                            selectRating(id, i);
+                        };
+                        container.appendChild(btn);
+                    }
+                }
+            });
+        }
+
+        function selectRating(factorId, rating) {
+            // Remove selected class from all buttons in this group
+            const buttons = document.querySelectorAll(`#${factorId} .rating-btn`);
+            buttons.forEach(btn => btn.classList.remove('selected'));
+
+            // Add selected class to clicked button
+            buttons[rating - 1].classList.add('selected');
+
+            // Save rating
+            surveyData.ratings[factorId] = rating;
+        }
+
+        function userTypeSelection(type) {
+            surveyData.userType = type;
+            if (type === 'yes') {
+                nextSection('2a');
+            } else {
+                nextSection('2b');
+            }
+        }
+
+        function saveAnswer(key, value) {
+            surveyData[key] = value;
+        }
+
+        function toggleReason(reason) {
+            const index = surveyData.selectedReasons.indexOf(reason);
+            if (index > -1) {
+                surveyData.selectedReasons.splice(index, 1);
+                event.target.style.background = '#667eea';
+            } else {
+                surveyData.selectedReasons.push(reason);
+                event.target.style.background = '#48bb78';
+            }
+        }
+
+        function toggleDemographic(demographic) {
+            const index = surveyData.selectedDemographics.indexOf(demographic);
+            if (index > -1) {
+                surveyData.selectedDemographics.splice(index, 1);
+                event.target.style.background = '#667eea';
+            } else {
+                surveyData.selectedDemographics.push(demographic);
+                event.target.style.background = '#48bb78';
+            }
+        }
+
+        function nextSection(sectionId) {
+            // Save text inputs from current section
+            saveCurrentSectionInputs();
+
+            const current = document.querySelector('.question-section.active');
+            current.classList.remove('active');
+
+            const next = document.getElementById('section' + sectionId);
+            next.classList.add('active');
+
+            currentSection = sectionId;
+            navigationHistory.push(sectionId);
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+
+        function previousSection() {
+            if (navigationHistory.length > 1) {
+                navigationHistory.pop(); // Remove current
+                const previousId = navigationHistory[navigationHistory.length - 1];
+
+                const current = document.querySelector('.question-section.active');
+                current.classList.remove('active');
+
+                const previous = document.getElementById('section' + previousId);
+                previous.classList.add('active');
+
+                currentSection = previousId;
+                updateProgress();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function saveCurrentSectionInputs() {
+            // Save system name
+            const systemName = document.getElementById('systemName');
+            if (systemName && systemName.value) {
+                surveyData.systemName = systemName.value;
+            }
+
+            // Save other factors
+            const otherFactors = document.getElementById('otherFactors');
+            if (otherFactors && otherFactors.value) {
+                surveyData.otherFactors = otherFactors.value;
+            }
+
+            // Save biggest challenge
+            const biggestChallenge = document.getElementById('biggestChallenge');
+            if (biggestChallenge && biggestChallenge.value) {
+                surveyData.biggestChallenge = biggestChallenge.value;
+            }
+
+            // Save other reasons
+            const otherReasons = document.getElementById('otherReasons');
+            if (otherReasons && otherReasons.value) {
+                surveyData.otherReasons = otherReasons.value;
+            }
+
+            // Save what would make buy
+            const wouldMakeBuy = document.getElementById('wouldMakeBuy');
+            if (wouldMakeBuy && wouldMakeBuy.value) {
+                surveyData.wouldMakeBuy = wouldMakeBuy.value;
+            }
+        }
+
+        function updateProgress() {
+            const totalSteps = surveyData.userType === 'yes' ? 8 : 9;
+            const currentStep = navigationHistory.length - 1;
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function submitSurvey() {
+            saveCurrentSectionInputs();
+            surveyData.completedAt = new Date().toISOString();
+            surveyData.navigationPath = navigationHistory;
+
+            // Save to localStorage
+            const existingData = JSON.parse(localStorage.getItem('surveyResponses') || '[]');
+            existingData.push(surveyData);
+            localStorage.setItem('surveyResponses', JSON.stringify(existingData));
+
+            // Show completion message
+            showCompletionMessage();
+        }
+
+        function showCompletionMessage() {
+            const content = document.getElementById('surveyContent');
+            content.innerHTML = `
+                <div class="completion-message">
+                    <div class="checkmark"></div>
+                    <h2>Thank You!</h2>
+                    <p>Your responses have been saved successfully.</p>
+                    <p style="margin-top: 15px;">Your feedback is invaluable in helping us understand the needs of indoor growing enthusiasts.</p>
+                    <button class="download-btn" onclick="downloadData()">Download My Responses</button>
+                    <button class="secondary-btn" onclick="location.reload()">Take Survey Again</button>
+                </div>
+            `;
+            document.getElementById('progressBar').style.width = '100%';
+        }
+
+        function downloadData() {
+            const dataStr = JSON.stringify(surveyData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `survey-response-${Date.now()}.json`;
+            link.click();
+        }
+
+        // Initialize on page load
+        window.onload = function() {
+            initRatingButtons();
+            updateProgress();
+        };
+
+        // Admin function to download all responses (can be called from console)
+        function downloadAllResponses() {
+            const allData = localStorage.getItem('surveyResponses');
+            if (!allData) {
+                alert('No survey responses found.');
+                return;
+            }
+
+            // Convert to CSV format
+            const responses = JSON.parse(allData);
+            let csv = 'Timestamp,User Type,System Name,Duration,Satisfaction,';
+
+            // Add rating headers
+            const ratingFactors = ['affordability', 'roi_financial', 'emotional_roi', 'time_to_harvest',
+                'knowledge_required', 'ease_of_use', 'space_utilization', 'variety_of_produce',
+                'automation_ai', 'management_software', 'aesthetics', 'sustainability',
+                'produce_quality', 'tech_range'];
+
+            csv += ratingFactors.join(',') + ',';
+            csv += 'Other Factors,Biggest Challenge,Selected Reasons,Other Reasons,';
+            csv += 'Would Make Buy,Demographics,Awareness,Considered,Not Interested Reason\n';
+
+            responses.forEach(response => {
+                const row = [
+                    response.timestamp,
+                    response.userType,
+                    response.systemName || '',
+                    response.usage_duration || '',
+                    response.satisfaction || '',
+                ];
+
+                // Add ratings
+                ratingFactors.forEach(factor => {
+                    row.push(response.ratings[factor] || response.ratings[factor + '_b'] || '');
+                });
+
+                row.push(
+                    (response.otherFactors || '').replace(/,/g, ';'),
+                    (response.biggestChallenge || '').replace(/,/g, ';'),
+                    (response.selectedReasons || []).join(';'),
+                    (response.otherReasons || '').replace(/,/g, ';'),
+                    (response.wouldMakeBuy || '').replace(/,/g, ';'),
+                    (response.selectedDemographics || []).join(';'),
+                    response.awareness || '',
+                    response.considered || '',
+                    response.not_interested_reason || ''
+                );
+
+                csv += row.map(field => `"${field}"`).join(',') + '\n';
+            });
+
+            // Download CSV
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `all-survey-responses-${Date.now()}.csv`;
+            link.click();
+
+            alert(`Downloaded ${responses.length} survey responses.`);
+        }
+
+        // Console helper message
+        console.log('%cSurvey Admin Tools', 'font-size: 20px; color: #667eea; font-weight: bold;');
+        console.log('%cTo download all survey responses, type: downloadAllResponses()', 'font-size: 14px; color: #718096;');
+        console.log('%cTo view all responses, type: JSON.parse(localStorage.getItem("surveyResponses"))', 'font-size: 14px; color: #718096;');
+        console.log('%cTo clear all responses, type: localStorage.removeItem("surveyResponses")', 'font-size: 14px; color: #718096;');
+    </script>
+</body>
+</html>
