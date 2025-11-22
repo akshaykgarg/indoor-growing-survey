@@ -55,6 +55,7 @@ function setupHeaders(sheet) {
   const headers = [
     // Basic Info
     'Timestamp',
+    'Age Range',
     'User Type',
 
     // Current Users Path
@@ -81,6 +82,7 @@ function setupHeaders(sheet) {
     // Current Users - Open Text
     'Other Important Factors',
     'Biggest Challenge',
+    'Usage Frequency',
 
     // Non-Users Path
     'Awareness of Systems',
@@ -90,6 +92,10 @@ function setupHeaders(sheet) {
     'Not Interested Reason',
     'What Would Make You Buy',
     'Demographics',
+
+    // Health & Wellness (Both Paths)
+    'Takes Supplements',
+    'Wellness Activities',
 
     // Metadata
     'Completed At',
@@ -126,6 +132,7 @@ function prepareRowData(data) {
   const row = [
     // Basic Info
     new Date(),
+    data.age_range || '',
     data.userType || '',
 
     // Current Users Only
@@ -152,6 +159,7 @@ function prepareRowData(data) {
     // Current Users - Open Text
     data.otherFactors || '',
     data.biggestChallenge || '',
+    data.usage_frequency || '',
 
     // Non-Users Only
     data.awareness || '',
@@ -161,6 +169,10 @@ function prepareRowData(data) {
     data.not_interested_reason || '',
     data.wouldMakeBuy || '',
     joinArray(data.selectedDemographics),
+
+    // Health & Wellness (Both Paths)
+    data.takes_supplements || '',
+    joinArray(data.selectedWellness),
 
     // Metadata
     data.completedAt || '',

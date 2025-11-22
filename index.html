@@ -269,6 +269,37 @@
             box-shadow: 0 5px 15px rgba(128, 90, 213, 0.4);
         }
 
+        .product-images {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .product-image {
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            max-width: 250px;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: #f7fafc;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .product-image p {
+            margin-top: 10px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 25px;
@@ -288,6 +319,15 @@
 
             button {
                 width: 100%;
+            }
+
+            .product-images {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .product-image {
+                max-width: 100%;
             }
         }
     </style>
@@ -309,7 +349,20 @@
                     <p class="question-subtext">This survey takes about 3-5 minutes. Your responses will help us understand the needs and experiences of both users and potential users of indoor growing systems.</p>
                 </div>
                 <div class="button-group">
-                    <button onclick="nextSection(1)" class="secondary-btn">Start Survey</button>
+                    <button onclick="nextSection('0a')" class="secondary-btn">Start Survey</button>
+                </div>
+            </div>
+
+            <!-- Section 0a: Age Range -->
+            <div class="question-section" id="section0a">
+                <div class="question">
+                    <p class="question-text">What is your age range?</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="saveAnswer('age_range', '14-24'); nextSection(1)">14-24</button>
+                    <button onclick="saveAnswer('age_range', '25-35'); nextSection(1)">25-35</button>
+                    <button onclick="saveAnswer('age_range', '35-55'); nextSection(1)">35-55</button>
+                    <button onclick="saveAnswer('age_range', '55+'); nextSection(1)">55+</button>
                 </div>
             </div>
 
@@ -317,7 +370,17 @@
             <div class="question-section" id="section1">
                 <div class="question">
                     <p class="question-text">Do you currently use an indoor growing unit or smart growing system for plants?</p>
-                    <p class="question-subtext">This includes any automated or semi-automated system like Gardyn, Lettuce Grow, AeroGarden, Click & Grow, or similar products.</p>
+                    <p class="question-subtext">Systems like these:</p>
+                </div>
+                <div class="product-images">
+                    <div class="product-image">
+                        <img src="https://gardyn.com/cdn/shop/files/1Gardyn_Home_3.0_Square_No_BG.png?v=1698699462" alt="Gardyn Indoor Garden" onerror="this.src='https://via.placeholder.com/250x200?text=Gardyn'">
+                        <p>Gardyn</p>
+                    </div>
+                    <div class="product-image">
+                        <img src="https://www.aerogarden.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/b/o/bounty_elite_b_1.jpg" alt="AeroGarden" onerror="this.src='https://via.placeholder.com/250x200?text=AeroGarden'">
+                        <p>AeroGarden</p>
+                    </div>
                 </div>
                 <div class="button-group">
                     <button onclick="userTypeSelection('yes')">Yes, I use one</button>
@@ -471,6 +534,59 @@
                 <div class="question">
                     <p class="question-text">What's the biggest challenge you face with your current system?</p>
                     <textarea class="text-input" id="biggestChallenge" placeholder="Share your main pain point..."></textarea>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                    <button onclick="nextSection('9a')">Next</button>
+                </div>
+            </div>
+
+            <!-- Section 9a: Usage Frequency (Tier 1 identifier) -->
+            <div class="question-section" id="section9a">
+                <div class="question">
+                    <p class="question-text">How actively are you using your system currently?</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="saveAnswer('usage_frequency', 'Daily/Very actively'); nextSection('10a')">Using it daily/very actively</button>
+                    <button onclick="saveAnswer('usage_frequency', 'Weekly'); nextSection('10a')">Using it weekly</button>
+                    <button onclick="saveAnswer('usage_frequency', 'Rarely'); nextSection('10a')">Rarely use it anymore</button>
+                    <button onclick="saveAnswer('usage_frequency', 'Sitting idle'); nextSection('10a')">It's sitting idle/not using</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                </div>
+            </div>
+
+            <!-- Section 10a: Supplements Question -->
+            <div class="question-section" id="section10a">
+                <div class="question">
+                    <p class="question-text">Do you currently take any health supplements or vitamins?</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="saveAnswer('takes_supplements', 'Yes, regularly'); nextSection('11a')">Yes, regularly</button>
+                    <button onclick="saveAnswer('takes_supplements', 'Yes, occasionally'); nextSection('11a')">Yes, occasionally</button>
+                    <button onclick="saveAnswer('takes_supplements', 'No'); nextSection('11a')">No</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                </div>
+            </div>
+
+            <!-- Section 11a: What supplements/wellness activities -->
+            <div class="question-section" id="section11a">
+                <div class="question">
+                    <p class="question-text">What do you currently do to support your health and wellness?</p>
+                    <p class="question-subtext">Select all that apply</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="toggleWellness('Vitamins/supplements')">Take vitamins/supplements</button>
+                    <button onclick="toggleWellness('Exercise regularly')">Exercise regularly</button>
+                    <button onclick="toggleWellness('Meditation/mindfulness')">Meditation/mindfulness</button>
+                    <button onclick="toggleWellness('Organic foods')">Buy organic foods</button>
+                    <button onclick="toggleWellness('Meal planning')">Meal planning/prep</button>
+                    <button onclick="toggleWellness('Track nutrition')">Track nutrition/macros</button>
+                    <button onclick="toggleWellness('Grow food outdoors')">Grow food outdoors</button>
+                    <button onclick="toggleWellness('None')">None of these</button>
                 </div>
                 <div class="navigation">
                     <button class="back-btn" onclick="previousSection()">Back</button>
@@ -658,6 +774,43 @@
                 </div>
                 <div class="navigation">
                     <button class="back-btn" onclick="previousSection()">Back</button>
+                    <button onclick="nextSection('10b')">Next</button>
+                </div>
+            </div>
+
+            <!-- Section 10b: Supplements Question -->
+            <div class="question-section" id="section10b">
+                <div class="question">
+                    <p class="question-text">Do you currently take any health supplements or vitamins?</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="saveAnswer('takes_supplements', 'Yes, regularly'); nextSection('11b')">Yes, regularly</button>
+                    <button onclick="saveAnswer('takes_supplements', 'Yes, occasionally'); nextSection('11b')">Yes, occasionally</button>
+                    <button onclick="saveAnswer('takes_supplements', 'No'); nextSection('11b')">No</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                </div>
+            </div>
+
+            <!-- Section 11b: What wellness activities -->
+            <div class="question-section" id="section11b">
+                <div class="question">
+                    <p class="question-text">What do you currently do to support your health and wellness?</p>
+                    <p class="question-subtext">Select all that apply</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="toggleWellness('Vitamins/supplements')">Take vitamins/supplements</button>
+                    <button onclick="toggleWellness('Exercise regularly')">Exercise regularly</button>
+                    <button onclick="toggleWellness('Meditation/mindfulness')">Meditation/mindfulness</button>
+                    <button onclick="toggleWellness('Organic foods')">Buy organic foods</button>
+                    <button onclick="toggleWellness('Meal planning')">Meal planning/prep</button>
+                    <button onclick="toggleWellness('Track nutrition')">Track nutrition/macros</button>
+                    <button onclick="toggleWellness('Grow food outdoors')">Grow food outdoors</button>
+                    <button onclick="toggleWellness('None')">None of these</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
                     <button onclick="submitSurvey()">Submit Survey</button>
                 </div>
             </div>
@@ -678,6 +831,7 @@
             ratings: {},
             selectedReasons: [],
             selectedDemographics: [],
+            selectedWellness: [],
             navigation: []
         };
 
@@ -757,6 +911,17 @@
                 event.target.style.background = '#667eea';
             } else {
                 surveyData.selectedDemographics.push(demographic);
+                event.target.style.background = '#48bb78';
+            }
+        }
+
+        function toggleWellness(activity) {
+            const index = surveyData.selectedWellness.indexOf(activity);
+            if (index > -1) {
+                surveyData.selectedWellness.splice(index, 1);
+                event.target.style.background = '#667eea';
+            } else {
+                surveyData.selectedWellness.push(activity);
                 event.target.style.background = '#48bb78';
             }
         }
