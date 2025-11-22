@@ -547,13 +547,55 @@
                     <p class="question-text">How actively are you using your system currently?</p>
                 </div>
                 <div class="button-group">
-                    <button onclick="saveAnswer('usage_frequency', 'Daily/Very actively'); nextSection('10a')">Using it daily/very actively</button>
-                    <button onclick="saveAnswer('usage_frequency', 'Weekly'); nextSection('10a')">Using it weekly</button>
-                    <button onclick="saveAnswer('usage_frequency', 'Rarely'); nextSection('10a')">Rarely use it anymore</button>
-                    <button onclick="saveAnswer('usage_frequency', 'Sitting idle'); nextSection('10a')">It's sitting idle/not using</button>
+                    <button onclick="saveAnswer('usage_frequency', 'Daily/Very actively'); nextSection('9a1')">Using it daily/very actively</button>
+                    <button onclick="saveAnswer('usage_frequency', 'Weekly'); nextSection('9a1')">Using it weekly</button>
+                    <button onclick="saveAnswer('usage_frequency', 'Rarely'); nextSection('9a1')">Rarely use it anymore</button>
+                    <button onclick="saveAnswer('usage_frequency', 'Sitting idle'); nextSection('9a1')">It's sitting idle/not using</button>
                 </div>
                 <div class="navigation">
                     <button class="back-btn" onclick="previousSection()">Back</button>
+                </div>
+            </div>
+
+            <!-- Section 9a1: Would recommend (Tier 1 identifier) -->
+            <div class="question-section" id="section9a1">
+                <div class="question">
+                    <p class="question-text">Would you recommend this system to a friend?</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="saveAnswer('would_recommend', 'Yes'); nextSection('9a2')">Yes, definitely</button>
+                    <button onclick="saveAnswer('would_recommend', 'Maybe'); nextSection('9a2')">Maybe</button>
+                    <button onclick="saveAnswer('would_recommend', 'No'); nextSection('9a2')">No, I wouldn't</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                </div>
+            </div>
+
+            <!-- Section 9a2: Salvageable (Tier 1 identifier) -->
+            <div class="question-section" id="section9a2">
+                <div class="question">
+                    <p class="question-text">If we fixed ONE issue, would you use your system more actively?</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="saveAnswer('salvageable', 'Yes'); nextSection('9a3')">Yes, absolutely</button>
+                    <button onclick="saveAnswer('salvageable', 'Maybe'); nextSection('9a3')">Maybe</button>
+                    <button onclick="saveAnswer('salvageable', 'No'); nextSection('10a')">No, too many issues</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                </div>
+            </div>
+
+            <!-- Section 9a3: What issue to fix -->
+            <div class="question-section" id="section9a3">
+                <div class="question">
+                    <p class="question-text">What ONE issue should be fixed?</p>
+                    <textarea class="text-input" id="issueToFix" placeholder="What would make you use it more?"></textarea>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                    <button onclick="nextSection('10a')">Next</button>
                 </div>
             </div>
 
@@ -645,7 +687,40 @@
                 </div>
                 <div class="navigation">
                     <button class="back-btn" onclick="previousSection()">Back</button>
-                    <button onclick="nextSection('6b')">Next</button>
+                    <button onclick="nextSection('4b1')">Next</button>
+                </div>
+            </div>
+
+            <!-- Section 4b1: Alternatives tried (Tier 2 identifier) -->
+            <div class="question-section" id="section4b1">
+                <div class="question">
+                    <p class="question-text">Have you tried any alternatives instead?</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="saveAnswer('alternatives_tried', 'DIY system'); nextSection('4b2')">Built my own DIY system</button>
+                    <button onclick="saveAnswer('alternatives_tried', 'Outdoor garden'); nextSection('4b2')">Have an outdoor garden</button>
+                    <button onclick="saveAnswer('alternatives_tried', 'Just buy from store'); nextSection('4b2')">Just buy from grocery store</button>
+                    <button onclick="saveAnswer('alternatives_tried', 'Nothing'); nextSection('4b2')">Haven't tried anything</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                </div>
+            </div>
+
+            <!-- Section 4b2: Price point (Tier 2 identifier) -->
+            <div class="question-section" id="section4b2">
+                <div class="question">
+                    <p class="question-text">At what price point would you reconsider purchasing?</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="saveAnswer('price_point', '$0-200'); nextSection('6b')">$0-200</button>
+                    <button onclick="saveAnswer('price_point', '$201-400'); nextSection('6b')">$201-400</button>
+                    <button onclick="saveAnswer('price_point', '$401-800'); nextSection('6b')">$401-800</button>
+                    <button onclick="saveAnswer('price_point', '$800+'); nextSection('6b')">$800+</button>
+                    <button onclick="saveAnswer('price_point', 'Price is not the issue'); nextSection('6b')">Price isn't the main issue</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
                 </div>
             </div>
 
@@ -750,7 +825,75 @@
                 </div>
                 <div class="navigation">
                     <button class="back-btn" onclick="previousSection()">Back</button>
-                    <button onclick="nextSection('9b')">Next</button>
+                    <button onclick="nextSection('8b1')">Next</button>
+                </div>
+            </div>
+
+            <!-- Section 8b1: What to grow (Tier 3 identifier) -->
+            <div class="question-section" id="section8b1">
+                <div class="question">
+                    <p class="question-text">Which of these would you want to grow indoors?</p>
+                    <p class="question-subtext">Select all that apply</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="toggleGrowInterest('Microgreens for smoothies')">Microgreens for smoothies</button>
+                    <button onclick="toggleGrowInterest('Medicinal herbs')">Medicinal herbs (basil, mint, cilantro)</button>
+                    <button onclick="toggleGrowInterest('Rare supplement herbs')">Rare herbs for supplements (ashwagandha, tulsi)</button>
+                    <button onclick="toggleGrowInterest('Vegetables')">Vegetables (tomatoes, peppers, etc.)</button>
+                    <button onclick="toggleGrowInterest('Flowers')">Flowers</button>
+                    <button onclick="toggleGrowInterest('Mushrooms')">Mushrooms</button>
+                    <button onclick="toggleGrowInterest('Nothing')">I don't want to grow anything</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                    <button onclick="nextSection('8b2')">Next</button>
+                </div>
+            </div>
+
+            <!-- Section 8b2: Supplement spending (Tier 3 identifier) -->
+            <div class="question-section" id="section8b2">
+                <div class="question">
+                    <p class="question-text">How much do you spend monthly on supplements/vitamins?</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="saveAnswer('supplement_spending', '$0'); nextSection('8b3')">$0</button>
+                    <button onclick="saveAnswer('supplement_spending', '$20-50'); nextSection('8b3')">$20-50</button>
+                    <button onclick="saveAnswer('supplement_spending', '$50-100'); nextSection('8b3')">$50-100</button>
+                    <button onclick="saveAnswer('supplement_spending', '$100+'); nextSection('8b3')">$100+</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                </div>
+            </div>
+
+            <!-- Section 8b3: Organic produce spending (Tier 3 identifier) -->
+            <div class="question-section" id="section8b3">
+                <div class="question">
+                    <p class="question-text">How much do you spend monthly on organic produce?</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="saveAnswer('produce_spending', '$0'); nextSection('8b4')">$0</button>
+                    <button onclick="saveAnswer('produce_spending', '$50-100'); nextSection('8b4')">$50-100</button>
+                    <button onclick="saveAnswer('produce_spending', '$100-200'); nextSection('8b4')">$100-200</button>
+                    <button onclick="saveAnswer('produce_spending', '$200+'); nextSection('8b4')">$200+</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
+                </div>
+            </div>
+
+            <!-- Section 8b4: Awareness test (Tier 3 identifier) -->
+            <div class="question-section" id="section8b4">
+                <div class="question">
+                    <p class="question-text">Did you know you can grow medicinal herbs indoors year-round with these systems?</p>
+                </div>
+                <div class="button-group">
+                    <button onclick="saveAnswer('herbs_awareness', 'Yes'); nextSection('9b')">Yes, I knew that</button>
+                    <button onclick="saveAnswer('herbs_awareness', 'No'); nextSection('9b')">No, I didn't know</button>
+                    <button onclick="saveAnswer('herbs_awareness', 'Interesting'); nextSection('9b')">That's interesting!</button>
+                </div>
+                <div class="navigation">
+                    <button class="back-btn" onclick="previousSection()">Back</button>
                 </div>
             </div>
 
@@ -832,6 +975,7 @@
             selectedReasons: [],
             selectedDemographics: [],
             selectedWellness: [],
+            selectedGrowInterests: [],
             navigation: []
         };
 
@@ -926,6 +1070,17 @@
             }
         }
 
+        function toggleGrowInterest(interest) {
+            const index = surveyData.selectedGrowInterests.indexOf(interest);
+            if (index > -1) {
+                surveyData.selectedGrowInterests.splice(index, 1);
+                event.target.style.background = '#667eea';
+            } else {
+                surveyData.selectedGrowInterests.push(interest);
+                event.target.style.background = '#48bb78';
+            }
+        }
+
         function nextSection(sectionId) {
             // Save text inputs from current section
             saveCurrentSectionInputs();
@@ -976,6 +1131,12 @@
             const biggestChallenge = document.getElementById('biggestChallenge');
             if (biggestChallenge && biggestChallenge.value) {
                 surveyData.biggestChallenge = biggestChallenge.value;
+            }
+
+            // Save issue to fix
+            const issueToFix = document.getElementById('issueToFix');
+            if (issueToFix && issueToFix.value) {
+                surveyData.issueToFix = issueToFix.value;
             }
 
             // Save other reasons

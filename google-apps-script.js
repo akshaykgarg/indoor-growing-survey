@@ -83,14 +83,23 @@ function setupHeaders(sheet) {
     'Other Important Factors',
     'Biggest Challenge',
     'Usage Frequency',
+    'Would Recommend',
+    'Salvageable',
+    'Issue To Fix',
 
     // Non-Users Path
     'Awareness of Systems',
     'Considered Purchase',
     'Reasons Not Purchased',
     'Other Reasons',
+    'Alternatives Tried',
+    'Price Point',
     'Not Interested Reason',
     'What Would Make You Buy',
+    'Grow Interests',
+    'Supplement Spending',
+    'Produce Spending',
+    'Herbs Awareness',
     'Demographics',
 
     // Health & Wellness (Both Paths)
@@ -160,14 +169,23 @@ function prepareRowData(data) {
     data.otherFactors || '',
     data.biggestChallenge || '',
     data.usage_frequency || '',
+    data.would_recommend || '',
+    data.salvageable || '',
+    data.issueToFix || '',
 
     // Non-Users Only
     data.awareness || '',
     data.considered || '',
     joinArray(data.selectedReasons),
     data.otherReasons || '',
+    data.alternatives_tried || '',
+    data.price_point || '',
     data.not_interested_reason || '',
     data.wouldMakeBuy || '',
+    joinArray(data.selectedGrowInterests),
+    data.supplement_spending || '',
+    data.produce_spending || '',
+    data.herbs_awareness || '',
     joinArray(data.selectedDemographics),
 
     // Health & Wellness (Both Paths)
