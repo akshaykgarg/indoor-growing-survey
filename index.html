@@ -1063,6 +1063,39 @@
                     <div class="star-value" id="value-quality">Not rated</div>
                 </div>
 
+                <div class="rating-section">
+                    <div class="rating-title">⏱️ Time & Effort (Maintenance + Time to Harvest)</div>
+                    <div class="rating-meaning">
+                        • 10 stars: Very time-consuming / High effort<br>
+                        • 5 stars: Moderate time commitment<br>
+                        • 1 star: Minimal time / Very low effort
+                    </div>
+                    <div class="stars-container" id="stars-time"></div>
+                    <div class="star-value" id="value-time">Not rated</div>
+                </div>
+
+                <div class="rating-section">
+                    <div class="rating-title">📐 Space & Aesthetics (Footprint + Looks + Design)</div>
+                    <div class="rating-meaning">
+                        • 10 stars: Very large / Doesn't look good<br>
+                        • 5 stars: Moderate size / Decent aesthetics<br>
+                        • 1 star: Compact / Beautiful design
+                    </div>
+                    <div class="stars-container" id="stars-space"></div>
+                    <div class="star-value" id="value-space">Not rated</div>
+                </div>
+
+                <div class="rating-section">
+                    <div class="rating-title">🤖 Automation & AI (Smart Features + Success Rate)</div>
+                    <div class="rating-meaning">
+                        • 10 stars: Fully automated / AI-powered / Guaranteed success<br>
+                        • 5 stars: Some automation / Moderate success rate<br>
+                        • 1 star: Manual / No automation / Uncertain results
+                    </div>
+                    <div class="stars-container" id="stars-automation"></div>
+                    <div class="star-value" id="value-automation">Not rated</div>
+                </div>
+
                 <div class="navigation">
                     <button class="next-btn" onclick="nextSection()">Next</button>
                 </div>
@@ -1188,6 +1221,9 @@
                 initStarRating('price');
                 initStarRating('ease');
                 initStarRating('quality');
+                initStarRating('time');
+                initStarRating('space');
+                initStarRating('automation');
             }
 
             // Initialize star rating for Tier 2 satisfaction question
