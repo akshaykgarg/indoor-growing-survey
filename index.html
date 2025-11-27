@@ -1152,26 +1152,6 @@
             },
 
             // TIER 3: Unexplored
-            tier3_interest: {
-                id: 'tier3_interest',
-                html: `
-                    
-                    <div class="question-text">Now that you know these exist, how interested are you?</div>
-                    <p class="question-subtext">Indoor growing systems let you grow fresh herbs and greens year-round using water, nutrients, and LED lights—no soil needed.</p>
-                    <div class="button-grid">
-                        <button class="option-btn" onclick="select('interest', 'very')">Very interested - I want to learn more!</button>
-                        <button class="option-btn" onclick="select('interest', 'somewhat')">Somewhat interested</button>
-                        <button class="option-btn" onclick="select('interest', 'neutral')">Neutral / Not sure</button>
-                        <button class="option-btn" onclick="select('interest', 'not_really')">Not really interested</button>
-                        <button class="option-btn" onclick="select('interest', 'not_at_all')">Not interested at all</button>
-                    </div>
-                <div class="navigation" style="margin-top: 20px;">
-                    <button class="back-btn" onclick="previousSection()">← Back</button>
-                </div>
-                `
-
-            },
-
             tier3_current_needs: {
                 id: 'tier3_current_needs',
                 html: `
@@ -1302,10 +1282,10 @@
                 `
             },
 
-            tier3_likelihood_and_price: {
-                id: 'tier3_likelihood_and_price',
+            tier3_likelihood: {
+                id: 'tier3_likelihood',
                 html: `
-                    
+
                     <div class="question-text">How likely would you be to try an indoor growing system?</div>
                     <div class="button-grid">
                         <button class="option-btn" onclick="select('tier3_likelihood', 'very_likely')">Very likely - I'd seriously consider it</button>
@@ -1314,8 +1294,17 @@
                         <button class="option-btn" onclick="select('tier3_likelihood', 'unlikely')">Unlikely</button>
                         <button class="option-btn" onclick="select('tier3_likelihood', 'very_unlikely')">Very unlikely - Not interested</button>
                     </div>
+                    <div class="navigation" style="margin-top: 20px;">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
+                    </div>
+                `
+            },
 
-                    <div class="question-text" style="margin-top: 40px;">What's the maximum you'd be willing to pay for a starter system?</div>
+            tier3_max_price: {
+                id: 'tier3_max_price',
+                html: `
+
+                    <div class="question-text">What's the maximum you'd be willing to pay for a starter system?</div>
                     <p class="question-subtext">Includes device + setup</p>
                     <div class="button-grid">
                         <button class="option-btn" onclick="surveyData.responses['max_price'] = 'under_100'; finish()">Under $100</button>
@@ -1594,17 +1583,17 @@
         function selectAwareness(answer) {
             surveyData.awareness = answer;
             if (answer === 'no') {
-                // Tier 3: Unexplored - all 8 questions
+                // Tier 3: Unexplored - 8 questions
                 surveyData.customerTier = 'TIER3';
                 sections.push(
-                    tierSections.tier3_interest,
                     tierSections.tier3_current_needs,
                     tierSections.tier3_describe,
                     tierSections.tier3_produce_spending,
                     tierSections.tier3_supplement_spending,
                     tierSections.tier3_what_valuable,
                     tierSections.tier3_biggest_concerns,
-                    tierSections.tier3_likelihood_and_price
+                    tierSections.tier3_likelihood,
+                    tierSections.tier3_max_price
                 );
             } else {
                 // Tier 2: Refusing - all 6 questions
