@@ -1498,8 +1498,75 @@
         function previousSection() {
             if (currentStep > 0) {
                 currentStep--;
+
+                // Check if we're going back to welcome - full reset
+                if (sections[currentStep].id === 'welcome') {
+                    resetSurvey();
+                }
+                // Check if we're going back to ownership question - need to clear tier sections
+                else if (sections[currentStep].id === 'ownership') {
+                    clearTierSections();
+                }
+
                 renderSection(sections[currentStep]);
             }
+        }
+
+        function resetSurvey() {
+            // Reset all data to initial state
+            surveyData.startTime = new Date().toISOString();
+            surveyData.age = '';
+            surveyData.ownership = '';
+            surveyData.customerTier = '';
+            surveyData.usage = '';
+            surveyData.satisfaction = '';
+            surveyData.awareness = '';
+            surveyData.responses = {};
+            surveyData.multiSelect = {};
+            surveyData.ratings = {};
+            surveyData.demographics = {};
+            surveyData.currency = 'USD';
+            surveyData.navigationPath = [];
+            surveyData.completedAt = '';
+
+            // Reset sections to base 9 (remove any tier-specific or completion sections)
+            sections.length = 9; // Keep only: welcome, age, gender, income, family, living, location, psycho, ownership
+
+            // Reset progress
+            currentStep = 0;
+            maxProgressReached = 0;
+            document.getElementById('progressBar').style.width = '0%';
+        }
+
+        function clearTierSections() {
+            // Remove all sections after ownership (index 8)
+            // Base sections: welcome, age, gender, income, family, living, location, psycho, ownership (9 total)
+            sections.length = 9;
+
+            // Reset tier-specific data
+            surveyData.ownership = '';
+            surveyData.customerTier = '';
+            surveyData.usage = '';
+            surveyData.satisfaction = '';
+            surveyData.awareness = '';
+
+            // Clear tier-specific responses
+            const tierKeys = Object.keys(surveyData.responses).filter(key =>
+                key.startsWith('tier1_') ||
+                key.startsWith('tier2_') ||
+                key.startsWith('tier3_') ||
+                key.startsWith('satisfied_')
+            );
+            tierKeys.forEach(key => delete surveyData.responses[key]);
+
+            // Clear tier-specific multi-select
+            const tierMultiKeys = ['why_bought', 'why_stopped', 'frustration', 'look_for', 'tier1_convince',
+                                   'love', 'improve', 'why_not', 'current_solution', 'grow_interests',
+                                   'convince', 'needs', 'describe', 'valuable', 'concerns'];
+            tierMultiKeys.forEach(key => delete surveyData.multiSelect[key]);
+
+            // Clear ratings (competing factors)
+            surveyData.ratings = {};
         }
 
         // Selection functions
