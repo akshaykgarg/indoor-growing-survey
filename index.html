@@ -208,10 +208,10 @@
         }
 
         .rating-meaning {
-            font-size: 13px;
+            font-size: 16px;
             color: #718096;
             margin-bottom: 15px;
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
         .stars-container {
@@ -384,7 +384,7 @@
         };
 
         let currentStep = 0;
-        const totalSteps = 15;
+        let totalSteps = 25; // Will be dynamically updated based on tier path
 
         const sections = [
             // Welcome
@@ -437,7 +437,7 @@
             {
                 id: 'income',
                 html: `
-                    <div class="question-text">What is your household income?</div>
+                    <div class="question-text">What is your household income per month?</div>
                     <div class="currency-selector">
                         <button class="currency-btn active" onclick="selectCurrency('USD')">USD $</button>
                         <button class="currency-btn" onclick="selectCurrency('AED')">AED</button>
@@ -446,31 +446,31 @@
 
                     <div class="income-options active" id="income-USD">
                         <div class="button-grid">
-                            <button class="option-btn" onclick="select('income', 'under_40k')">Under $40,000</button>
-                            <button class="option-btn" onclick="select('income', '40k-75k')">$40,000 - $75,000</button>
-                            <button class="option-btn" onclick="select('income', '75k-125k')">$75,000 - $125,000</button>
-                            <button class="option-btn" onclick="select('income', '125k-200k')">$125,000 - $200,000</button>
-                            <button class="option-btn" onclick="select('income', 'over_200k')">Over $200,000</button>
+                            <button class="option-btn" onclick="select('income', 'under_3.3k')">Under $3,300/month</button>
+                            <button class="option-btn" onclick="select('income', '3.3k-6.3k')">$3,300 - $6,300/month</button>
+                            <button class="option-btn" onclick="select('income', '6.3k-10.4k')">$6,300 - $10,400/month</button>
+                            <button class="option-btn" onclick="select('income', '10.4k-16.7k')">$10,400 - $16,700/month</button>
+                            <button class="option-btn" onclick="select('income', 'over_16.7k')">Over $16,700/month</button>
                         </div>
                     </div>
 
                     <div class="income-options" id="income-AED">
                         <div class="button-grid">
-                            <button class="option-btn" onclick="select('income', 'under_147k')">Under 147,000 AED</button>
-                            <button class="option-btn" onclick="select('income', '147k-275k')">147,000 - 275,000 AED</button>
-                            <button class="option-btn" onclick="select('income', '275k-459k')">275,000 - 459,000 AED</button>
-                            <button class="option-btn" onclick="select('income', '459k-734k')">459,000 - 734,000 AED</button>
-                            <button class="option-btn" onclick="select('income', 'over_734k')">Over 734,000 AED</button>
+                            <button class="option-btn" onclick="select('income', 'under_12.3k')">Under 12,300 AED/month</button>
+                            <button class="option-btn" onclick="select('income', '12.3k-23k')">12,300 - 23,000 AED/month</button>
+                            <button class="option-btn" onclick="select('income', '23k-38.3k')">23,000 - 38,300 AED/month</button>
+                            <button class="option-btn" onclick="select('income', '38.3k-61.2k')">38,300 - 61,200 AED/month</button>
+                            <button class="option-btn" onclick="select('income', 'over_61.2k')">Over 61,200 AED/month</button>
                         </div>
                     </div>
 
                     <div class="income-options" id="income-INR">
                         <div class="button-grid">
-                            <button class="option-btn" onclick="select('income', 'under_33L')">Under ₹33 Lakhs</button>
-                            <button class="option-btn" onclick="select('income', '33L-62L')">₹33 - ₹62 Lakhs</button>
-                            <button class="option-btn" onclick="select('income', '62L-1.04Cr')">₹62 Lakhs - ₹1.04 Crore</button>
-                            <button class="option-btn" onclick="select('income', '1.04Cr-1.66Cr')">₹1.04 - ₹1.66 Crore</button>
-                            <button class="option-btn" onclick="select('income', 'over_1.66Cr')">Over ₹1.66 Crore</button>
+                            <button class="option-btn" onclick="select('income', 'under_2.75L')">Under ₹2.75 Lakhs/month</button>
+                            <button class="option-btn" onclick="select('income', '2.75L-5.2L')">₹2.75 - ₹5.2 Lakhs/month</button>
+                            <button class="option-btn" onclick="select('income', '5.2L-8.7L')">₹5.2 - ₹8.7 Lakhs/month</button>
+                            <button class="option-btn" onclick="select('income', '8.7L-13.8L')">₹8.7 - ₹13.8 Lakhs/month</button>
+                            <button class="option-btn" onclick="select('income', 'over_13.8L')">Over ₹13.8 Lakhs/month</button>
                         </div>
                     </div>
                 `
@@ -521,8 +521,8 @@
             {
                 id: 'psychographics',
                 html: `
-                    <div class="question-text">Which of these describe you?</div>
-                    <p class="question-subtext">Select all that apply</p>
+                    <div class="question-text">Which of these describe you? - Select ALL that apply</div>
+                    <p class="question-subtext"></p>
                     <div class="button-grid">
                         <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'health')">Health-conscious</button>
                         <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'fitness')">Fitness enthusiast</button>
@@ -613,7 +613,7 @@
                 html: `
                     
                     <div class="question-text">Why are you barely using it now?</div>
-                    <p class="question-subtext">Select all that apply</p>
+                    <p class="question-subtext" style="font-weight: 600; color: #667eea;">✓ Select ALL that apply</p>
                     <div class="button-grid">
                         <button class="option-btn multi-select" onclick="toggleMulti('why_stopped', 'expensive')">Too expensive to maintain</button>
                         <button class="option-btn multi-select" onclick="toggleMulti('why_stopped', 'complicated')">Too complicated</button>
@@ -623,6 +623,7 @@
                         <button class="option-btn multi-select" onclick="toggleMulti('why_stopped', 'novelty')">Novelty wore off</button>
                     </div>
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="nextSection()">Next</button>
                     </div>
                 `
@@ -635,6 +636,7 @@
                     <div class="question-text">What's your biggest frustration?</div>
                     <textarea class="text-area" id="frustration-input" placeholder="Tell us your biggest pain point..."></textarea>
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="saveText('frustration'); nextSection()">Next</button>
                     </div>
                 `
@@ -647,6 +649,7 @@
                     <div class="question-text">Which system do you currently use?</div>
                     <input type="text" class="text-input" id="tier1-system-input" placeholder="e.g., Gardyn, AeroGarden, Click & Grow, Lettuce Grow, Rise Gardens, DIY">
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="saveText('tier1_system'); nextSection()">Next</button>
                     </div>
                 `
@@ -672,7 +675,7 @@
                 html: `
                     
                     <div class="question-text">What made you buy it originally?</div>
-                    <p class="question-subtext">Select all that apply</p>
+                    <p class="question-subtext" style="font-weight: 600; color: #667eea;">✓ Select ALL that apply</p>
                     <div class="button-grid">
                         <button class="option-btn multi-select" onclick="toggleMulti('why_bought', 'fresh_herbs')">Fresh herbs/vegetables year-round</button>
                         <button class="option-btn multi-select" onclick="toggleMulti('why_bought', 'healthier')">Healthier, pesticide-free food</button>
@@ -684,6 +687,7 @@
                         <button class="option-btn multi-select" onclick="toggleMulti('why_bought', 'gift')">Gift / Impulse purchase</button>
                     </div>
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="nextSection()">Next</button>
                     </div>
                 `
@@ -708,7 +712,7 @@
                 html: `
                     
                     <div class="question-text">If you were to replace your system, what would you look for?</div>
-                    <p class="question-subtext">Select all that apply</p>
+                    <p class="question-subtext" style="font-weight: 600; color: #667eea;">✓ Select ALL that apply</p>
                     <div class="button-grid">
                         <button class="option-btn multi-select" onclick="toggleMulti('look_for', 'lower_price')">Much lower price (initial + ongoing)</button>
                         <button class="option-btn multi-select" onclick="toggleMulti('look_for', 'easier')">Easier to use / Less technical</button>
@@ -721,6 +725,7 @@
                         <button class="option-btn multi-select" onclick="toggleMulti('look_for', 'giving_up', true)">Nothing - I'm giving up on indoor growing</button>
                     </div>
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="nextSection()">Next</button>
                     </div>
                 `
@@ -763,6 +768,7 @@
                     <div class="question-text">What would convince you to keep using it actively?</div>
                     <textarea class="text-area" id="tier1-convince-input" placeholder="What would make you an active user again?"></textarea>
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="saveText('tier1_convince'); finish()">Next</button>
                     </div>
                 `
@@ -776,6 +782,7 @@
                     <div class="question-text">Which system do you use?</div>
                     <input type="text" class="text-input" id="satisfied-system-input" placeholder="e.g., Gardyn, AeroGarden, Click & Grow, Lettuce Grow">
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="saveText('satisfied_system'); nextSection()">Next</button>
                     </div>
                 `
@@ -801,7 +808,7 @@
                 html: `
                     
                     <div class="question-text">What do you love most about it?</div>
-                    <p class="question-subtext">Select all that apply</p>
+                    <p class="question-subtext" style="font-weight: 600; color: #667eea;">✓ Select ALL that apply</p>
                     <div class="button-grid">
                         <button class="option-btn multi-select" onclick="toggleMulti('love', 'fresh')">Always have fresh herbs/greens</button>
                         <button class="option-btn multi-select" onclick="toggleMulti('love', 'quality')">Quality is better than store-bought</button>
@@ -814,6 +821,7 @@
                         <button class="option-btn multi-select" onclick="toggleMulti('love', 'looks_great')">Looks great in my space</button>
                     </div>
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="nextSection()">Next</button>
                     </div>
                 `
@@ -824,7 +832,7 @@
                 html: `
                     
                     <div class="question-text">What would make it even better?</div>
-                    <p class="question-subtext">Select all that apply</p>
+                    <p class="question-subtext" style="font-weight: 600; color: #667eea;">✓ Select ALL that apply</p>
                     <div class="button-grid">
                         <button class="option-btn multi-select" onclick="toggleMulti('improve', 'lower_costs')">Lower ongoing costs (pods, nutrients)</button>
                         <button class="option-btn multi-select" onclick="toggleMulti('improve', 'more_variety')">More plant variety options</button>
@@ -837,6 +845,7 @@
                         <button class="option-btn multi-select" onclick="toggleMulti('improve', 'nothing', true)">Nothing - it's perfect!</button>
                     </div>
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="nextSection()">Next</button>
                     </div>
                 `
@@ -864,6 +873,7 @@
                     <div class="question-text">If you could improve ONE thing, what would it be?</div>
                     <textarea class="text-area" id="satisfied-one-thing-input" placeholder="What's the one thing that would make it even better?"></textarea>
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="saveText('satisfied_one_thing'); finish()">Next</button>
                     </div>
                 `
@@ -875,7 +885,7 @@
                 html: `
                     
                     <div class="question-text">You've heard of these but don't own one. Why not?</div>
-                    <p class="question-subtext">Select all that apply</p>
+                    <p class="question-subtext" style="font-weight: 600; color: #667eea;">✓ Select ALL that apply</p>
                     <div class="button-grid">
                         <button class="option-btn multi-select" onclick="toggleMulti('why_not', 'expensive')">Too expensive</button>
                         <button class="option-btn multi-select" onclick="toggleMulti('why_not', 'complicated')">Seems too complicated</button>
@@ -885,6 +895,7 @@
                         <button class="option-btn multi-select" onclick="toggleMulti('why_not', 'prefer_store')">Prefer buying from store</button>
                     </div>
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="nextSection()">Next</button>
                     </div>
                 `
@@ -893,8 +904,9 @@
             tier2_current_solution: {
                 id: 'tier2_current_solution',
                 html: `
-                    
+
                     <div class="question-text">How do you currently get fresh herbs and greens?</div>
+                    <p class="question-subtext" style="font-weight: 600; color: #667eea;">✓ Select ALL that apply</p>
                     <div class="button-grid">
                         <button class="option-btn multi-select" onclick="toggleMulti('current', 'grocery')">Grocery store</button>
                         <button class="option-btn multi-select" onclick="toggleMulti('current', 'farmers_market')">Farmers market</button>
@@ -903,6 +915,7 @@
                         <button class="option-btn multi-select" onclick="toggleMulti('current', 'not_much')">Don't eat much fresh produce</button>
                     </div>
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="nextSection()">Next</button>
                     </div>
                 `
@@ -923,6 +936,7 @@
                         <div class="star-value" id="value-tier2-satisfaction">Not rated</div>
                     </div>
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="nextSection()">Next</button>
                     </div>
                 `
@@ -933,7 +947,7 @@
                 html: `
                     
                     <div class="question-text">What would convince you to buy one?</div>
-                    <p class="question-subtext">Select all that apply</p>
+                    <p class="question-subtext" style="font-weight: 600; color: #667eea;">✓ Select ALL that apply</p>
                     <div class="button-grid">
                         <button class="option-btn multi-select" onclick="toggleMulti('convince', 'lower_price')">Much lower price</button>
                         <button class="option-btn multi-select" onclick="toggleMulti('convince', 'guaranteed')">Guaranteed to work</button>
@@ -943,6 +957,7 @@
                         <button class="option-btn multi-select" onclick="toggleMulti('convince', 'nothing', true)">Nothing would convince me</button>
                     </div>
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="nextSection()">Next</button>
                     </div>
                 `
@@ -953,7 +968,7 @@
                 html: `
                     
                     <div class="question-text">If you could grow these at home with minimal effort, which would interest you?</div>
-                    <p class="question-subtext">Select all that apply</p>
+                    <p class="question-subtext" style="font-weight: 600; color: #667eea;">✓ Select ALL that apply</p>
                     <div class="button-grid">
                         <button class="option-btn multi-select" onclick="toggleMulti('grow_interests', 'cooking_herbs')">Fresh cooking herbs (basil, cilantro, parsley)</button>
                         <button class="option-btn multi-select" onclick="toggleMulti('grow_interests', 'salad_greens')">Salad greens (lettuce, spinach, kale)</button>
@@ -965,6 +980,7 @@
                         <button class="option-btn multi-select" onclick="toggleMulti('grow_interests', 'none', true)">None of these interest me</button>
                     </div>
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="nextSection()">Next</button>
                     </div>
                 `
@@ -1005,8 +1021,9 @@
             tier3_current_needs: {
                 id: 'tier3_current_needs',
                 html: `
-                    
+
                     <div class="question-text">How do you currently handle getting fresh food?</div>
+                    <p class="question-subtext" style="font-weight: 600; color: #667eea;">✓ Select ALL that apply</p>
                     <div class="button-grid">
                         <button class="option-btn multi-select" onclick="toggleMulti('needs', 'grocery')">Regular grocery shopping</button>
                         <button class="option-btn multi-select" onclick="toggleMulti('needs', 'farmers_market')">Farmers markets</button>
@@ -1015,6 +1032,7 @@
                         <button class="option-btn multi-select" onclick="toggleMulti('needs', 'not_focused')">I don't focus much on fresh food</button>
                     </div>
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="nextSection()">Next</button>
                     </div>
                 `
@@ -1025,7 +1043,7 @@
                 html: `
                     
                     <div class="question-text">Which of these describe you?</div>
-                    <p class="question-subtext">Select all that apply</p>
+                    <p class="question-subtext" style="font-weight: 600; color: #667eea;">✓ Select ALL that apply</p>
                     <div class="button-grid">
                         <button class="option-btn multi-select" onclick="toggleMulti('describe', 'health')">Health-conscious</button>
                         <button class="option-btn multi-select" onclick="toggleMulti('describe', 'fitness')">Fitness enthusiast</button>
@@ -1038,6 +1056,7 @@
                         <button class="option-btn multi-select" onclick="toggleMulti('describe', 'none', true)">None of these</button>
                     </div>
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="nextSection()">Next</button>
                     </div>
                 `
@@ -1078,7 +1097,7 @@
                 html: `
                     
                     <div class="question-text">What would be most valuable to you about growing your own food at home?</div>
-                    <p class="question-subtext">Select all that apply</p>
+                    <p class="question-subtext" style="font-weight: 600; color: #667eea;">✓ Select ALL that apply</p>
                     <div class="button-grid">
                         <button class="option-btn multi-select" onclick="toggleMulti('valuable', 'fresh')">Always have fresh herbs/greens available</button>
                         <button class="option-btn multi-select" onclick="toggleMulti('valuable', 'health')">Know exactly what's in my food (no pesticides)</button>
@@ -1091,6 +1110,7 @@
                         <button class="option-btn multi-select" onclick="toggleMulti('valuable', 'not_valuable', true)">None of these sound valuable to me</button>
                     </div>
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="nextSection()">Next</button>
                     </div>
                 `
@@ -1101,7 +1121,7 @@
                 html: `
                     
                     <div class="question-text">What would be your biggest concerns or barriers to trying this?</div>
-                    <p class="question-subtext">Select all that apply</p>
+                    <p class="question-subtext" style="font-weight: 600; color: #667eea;">✓ Select ALL that apply</p>
                     <div class="button-grid">
                         <button class="option-btn multi-select" onclick="toggleMulti('concerns', 'price')">Price - Too expensive</button>
                         <button class="option-btn multi-select" onclick="toggleMulti('concerns', 'complicated')">Seems too complicated / High learning curve</button>
@@ -1114,6 +1134,7 @@
                         <button class="option-btn multi-select" onclick="toggleMulti('concerns', 'no_concerns', true)">No concerns - I'd try it!</button>
                     </div>
                     <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                         <button class="next-btn" onclick="nextSection()">Next</button>
                     </div>
                 `
@@ -1220,6 +1241,7 @@
                 </div>
 
                 <div class="navigation">
+                        <button class="back-btn" onclick="previousSection()">← Back</button>
                     <button class="next-btn" onclick="nextSection()">Next</button>
                 </div>
             `
@@ -1263,13 +1285,22 @@
         }
 
         function updateProgress() {
-            const progress = ((currentStep + 1) / totalSteps) * 100;
+            // Update totalSteps to match current sections length (dynamic based on tier)
+            totalSteps = sections.length;
+            const progress = (currentStep / totalSteps) * 100;
             document.getElementById('progressBar').style.width = Math.min(progress, 100) + '%';
         }
 
         function nextSection() {
             currentStep++;
             if (currentStep < sections.length) {
+                renderSection(sections[currentStep]);
+            }
+        }
+
+        function previousSection() {
+            if (currentStep > 0) {
+                currentStep--;
                 renderSection(sections[currentStep]);
             }
         }
