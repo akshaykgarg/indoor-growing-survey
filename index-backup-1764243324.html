@@ -513,9 +513,6 @@
                         <button class="option-btn" onclick="select('age', '55-64')">55-64</button>
                         <button class="option-btn" onclick="select('age', '65+')">65+</button>
                     </div>
-                    <div class="navigation" style="margin-top: 20px;">
-                        <button class="back-btn" onclick="previousSection()">← Back</button>
-                    </div>
                 `
             },
 
@@ -528,9 +525,6 @@
                         <button class="option-btn" onclick="select('gender', 'male')">Male</button>
                         <button class="option-btn" onclick="select('gender', 'female')">Female</button>
                         <button class="option-btn" onclick="select('gender', 'non_binary')">Non-binary</button>
-                    </div>
-                    <div class="navigation" style="margin-top: 20px;">
-                        <button class="back-btn" onclick="previousSection()">← Back</button>
                     </div>
                 `
             },
@@ -575,9 +569,6 @@
                             <button class="option-btn" onclick="select('income', 'over_13.8L')">Over ₹13.8 Lakhs/month</button>
                         </div>
                     </div>
-                    <div class="navigation" style="margin-top: 20px;">
-                        <button class="back-btn" onclick="previousSection()">← Back</button>
-                    </div>
                 `
             },
 
@@ -591,9 +582,6 @@
                         <button class="option-btn" onclick="select('family', 'single_kids')">Single with children</button>
                         <button class="option-btn" onclick="select('family', 'couple_no_kids')">Couple, no children</button>
                         <button class="option-btn" onclick="select('family', 'couple_kids')">Couple with children</button>
-                    </div>
-                    <div class="navigation" style="margin-top: 20px;">
-                        <button class="back-btn" onclick="previousSection()">← Back</button>
                     </div>
                 `
             },
@@ -609,9 +597,6 @@
                         <button class="option-btn" onclick="select('living', 'house_rent')">House - Rent</button>
                         <button class="option-btn" onclick="select('living', 'house_own')">House - Own</button>
                     </div>
-                    <div class="navigation" style="margin-top: 20px;">
-                        <button class="back-btn" onclick="previousSection()">← Back</button>
-                    </div>
                 `
             },
 
@@ -624,9 +609,6 @@
                         <button class="option-btn" onclick="select('location', 'urban')">Urban - City center</button>
                         <button class="option-btn" onclick="select('location', 'suburban')">Suburban - Outside city</button>
                         <button class="option-btn" onclick="select('location', 'rural')">Rural - Countryside</button>
-                    </div>
-                    <div class="navigation" style="margin-top: 20px;">
-                        <button class="back-btn" onclick="previousSection()">← Back</button>
                     </div>
                 `
             },
@@ -675,9 +657,6 @@
                         <button class="option-btn" onclick="selectOwnership('yes')">✅ Yes, I currently use one</button>
                         <button class="option-btn" onclick="selectOwnership('no')">❌ No, I don't use one</button>
                     </div>
-                    <div class="navigation" style="margin-top: 20px;">
-                        <button class="back-btn" onclick="previousSection()">← Back</button>
-                    </div>
                 `
             }
         ];
@@ -695,9 +674,6 @@
                         <button class="option-btn" onclick="selectUsage('monthly')">Monthly - minimal maintenance</button>
                         <button class="option-btn" onclick="selectUsage('idle')">Sitting idle / Not using anymore</button>
                     </div>
-                    <div class="navigation" style="margin-top: 20px;">
-                        <button class="back-btn" onclick="previousSection()">← Back</button>
-                    </div>
                 `
             },
 
@@ -712,9 +688,6 @@
                         <button class="option-btn" onclick="selectSatisfaction('dissatisfied')">Dissatisfied</button>
                         <button class="option-btn" onclick="selectSatisfaction('very_dissatisfied')">Very dissatisfied</button>
                     </div>
-                    <div class="navigation" style="margin-top: 20px;">
-                        <button class="back-btn" onclick="previousSection()">← Back</button>
-                    </div>
                 `
             },
 
@@ -726,9 +699,6 @@
                     <div class="button-grid">
                         <button class="option-btn" onclick="selectAwareness('yes')">Yes, I know what they are</button>
                         <button class="option-btn" onclick="selectAwareness('no')">No, this is new to me</button>
-                    </div>
-                    <div class="navigation" style="margin-top: 20px;">
-                        <button class="back-btn" onclick="previousSection()">← Back</button>
                     </div>
                 `
             },
@@ -784,7 +754,7 @@
             tier1_duration: {
                 id: 'tier1_duration',
                 html: `
-
+                    
                     <div class="question-text">How long have you been using it?</div>
                     <div class="button-grid">
                         <button class="option-btn" onclick="select('tier1_duration', 'less_3mo')">Less than 3 months</button>
@@ -792,9 +762,6 @@
                         <button class="option-btn" onclick="select('tier1_duration', '6-12mo')">6-12 months</button>
                         <button class="option-btn" onclick="select('tier1_duration', '1-2yr')">1-2 years</button>
                         <button class="option-btn" onclick="select('tier1_duration', '2+yr')">2+ years</button>
-                    </div>
-                    <div class="navigation" style="margin-top: 20px;">
-                        <button class="back-btn" onclick="previousSection()">← Back</button>
                     </div>
                 `
             },
@@ -825,16 +792,13 @@
             tier1_switching: {
                 id: 'tier1_switching',
                 html: `
-
+                    
                     <div class="question-text">Have you considered switching to a different brand or system?</div>
                     <div class="button-grid">
                         <button class="option-btn" onclick="select('tier1_switching', 'actively_researching')">Yes, actively researching alternatives</button>
                         <button class="option-btn" onclick="select('tier1_switching', 'thinking')">Yes, thinking about it</button>
                         <button class="option-btn" onclick="select('tier1_switching', 'might_stop')">No, but I might stop using indoor growing altogether</button>
                         <button class="option-btn" onclick="select('tier1_switching', 'committed')">No, I'm committed to making this work</button>
-                    </div>
-                    <div class="navigation" style="margin-top: 20px;">
-                        <button class="back-btn" onclick="previousSection()">← Back</button>
                     </div>
                 `
             },
@@ -875,11 +839,7 @@
                         <button class="option-btn" onclick="select('tier1_six_months', 'unlikely')">Unlikely - Probably will stop</button>
                         <button class="option-btn" onclick="select('tier1_six_months', 'very_unlikely')">Very unlikely - Already stopped</button>
                     </div>
-                <div class="navigation" style="margin-top: 20px;">
-                    <button class="back-btn" onclick="previousSection()">← Back</button>
-                </div>
                 `
-
             },
 
             tier1_recommend: {
@@ -894,11 +854,7 @@
                         <button class="option-btn" onclick="select('tier1_recommend', 'probably_not')">Probably not</button>
                         <button class="option-btn" onclick="select('tier1_recommend', 'definitely_not')">Definitely not</button>
                     </div>
-                <div class="navigation" style="margin-top: 20px;">
-                    <button class="back-btn" onclick="previousSection()">← Back</button>
-                </div>
                 `
-
             },
 
             tier1_what_convince: {
@@ -940,11 +896,7 @@
                         <button class="option-btn" onclick="select('satisfied_duration', '1-2yr')">1-2 years</button>
                         <button class="option-btn" onclick="select('satisfied_duration', '2+yr')">2+ years</button>
                     </div>
-                <div class="navigation" style="margin-top: 20px;">
-                    <button class="back-btn" onclick="previousSection()">← Back</button>
-                </div>
                 `
-
             },
 
             satisfied_love: {
@@ -1007,11 +959,7 @@
                         <button class="option-btn" onclick="select('satisfied_recommend', 'probably_not')">Probably not</button>
                         <button class="option-btn" onclick="select('satisfied_recommend', 'definitely_not')">Definitely not</button>
                     </div>
-                <div class="navigation" style="margin-top: 20px;">
-                    <button class="back-btn" onclick="previousSection()">← Back</button>
-                </div>
                 `
-
             },
 
             satisfied_one_thing: {
@@ -1137,7 +1085,7 @@
             tier2_likelihood: {
                 id: 'tier2_likelihood',
                 html: `
-
+                    
                     <div class="question-text">How likely would you be to try indoor growing in the next year?</div>
                     <div class="button-grid">
                         <button class="option-btn" onclick="surveyData.responses['tier2_likelihood'] = 'very_likely'; finish()">Very likely - I'll research options</button>
@@ -1145,9 +1093,6 @@
                         <button class="option-btn" onclick="surveyData.responses['tier2_likelihood'] = 'neutral'; finish()">Neutral / Not sure</button>
                         <button class="option-btn" onclick="surveyData.responses['tier2_likelihood'] = 'unlikely'; finish()">Unlikely</button>
                         <button class="option-btn" onclick="surveyData.responses['tier2_likelihood'] = 'very_unlikely'; finish()">Very unlikely - Not for me</button>
-                    </div>
-                    <div class="navigation" style="margin-top: 20px;">
-                        <button class="back-btn" onclick="previousSection()">← Back</button>
                     </div>
                 `
             },
@@ -1166,11 +1111,7 @@
                         <button class="option-btn" onclick="select('interest', 'not_really')">Not really interested</button>
                         <button class="option-btn" onclick="select('interest', 'not_at_all')">Not interested at all</button>
                     </div>
-                <div class="navigation" style="margin-top: 20px;">
-                    <button class="back-btn" onclick="previousSection()">← Back</button>
-                </div>
                 `
-
             },
 
             tier3_current_needs: {
@@ -1230,11 +1171,7 @@
                         <button class="option-btn" onclick="select('produce_spending', 'over_300')">Over $300</button>
                         <button class="option-btn" onclick="select('produce_spending', 'not_sure')">Not sure</button>
                     </div>
-                <div class="navigation" style="margin-top: 20px;">
-                    <button class="back-btn" onclick="previousSection()">← Back</button>
-                </div>
                 `
-
             },
 
             tier3_supplement_spending: {
@@ -1248,11 +1185,7 @@
                         <button class="option-btn" onclick="select('supplements', 'rarely')">Rarely / Sometimes</button>
                         <button class="option-btn" onclick="select('supplements', 'no')">No, I don't take supplements</button>
                     </div>
-                <div class="navigation" style="margin-top: 20px;">
-                    <button class="back-btn" onclick="previousSection()">← Back</button>
-                </div>
                 `
-
             },
 
             tier3_what_valuable: {
@@ -1325,9 +1258,6 @@
                         <button class="option-btn" onclick="surveyData.responses['max_price'] = '400_600'; finish()">$400 - $600</button>
                         <button class="option-btn" onclick="surveyData.responses['max_price'] = 'over_600'; finish()">Over $600</button>
                         <button class="option-btn" onclick="surveyData.responses['max_price'] = 'not_sure'; finish()">Not sure</button>
-                    </div>
-                    <div class="navigation" style="margin-top: 20px;">
-                        <button class="back-btn" onclick="previousSection()">← Back</button>
                     </div>
                 `
             }
