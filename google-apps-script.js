@@ -113,7 +113,7 @@ function prepareRowData(data) {
     getResponse('tier2_likelihood'),
 
     // TIER 3: Unexplored Questions (8)
-    getResponse('interest'),
+    '', // Interest question removed
     getMultiSelect('needs'),
     getMultiSelect('describe'),
     getResponse('produce_spending'),
@@ -194,8 +194,8 @@ function setupHeaders() {
     'T2: What Would Convince',
     'T2: Likelihood to Try',
 
-    // TIER 3: Unexplored (8 questions)
-    'T3: Interest Level',
+    // TIER 3: Unexplored (8 questions - Interest removed, column kept for compatibility)
+    'T3: Interest Level (removed)',
     'T3: Current Food Sources',
     'T3: Describes Them',
     'T3: Produce Spending',
