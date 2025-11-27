@@ -446,7 +446,6 @@
     <div class="container">
         <div class="header">
             <h1>🌱 Indoor Growing Systems Survey</h1>
-            <p>Prototype - Test the new tier-based flow</p>
         </div>
 
         <div class="progress-bar">
@@ -479,7 +478,7 @@
         };
 
         let currentStep = 0;
-        let totalSteps = 25; // Will be dynamically updated based on tier path
+        let totalSteps = 30; // Estimated total steps (will be updated when tier is determined)
         let maxProgressReached = 0; // Track maximum progress to prevent backward movement
 
         const sections = [
@@ -1488,8 +1487,7 @@
         }
 
         function updateProgress() {
-            // Update totalSteps to match current sections length (dynamic based on tier)
-            totalSteps = sections.length;
+            // Calculate progress as percentage of estimated total steps
             const progress = (currentStep / totalSteps) * 100;
 
             // Only move progress forward, never backward
