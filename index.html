@@ -242,6 +242,101 @@
             margin-top: 10px;
         }
 
+        /* Slider Styles */
+        .slider-container {
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 12px;
+            border-radius: 6px;
+            background: linear-gradient(to right, #e2e8f0 0%, #667eea 50%, #48bb78 100%);
+            outline: none;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            background: #764ba2;
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.6);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .slider::-moz-range-thumb:hover {
+            background: #764ba2;
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.6);
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #718096;
+        }
+
+        .slider-value {
+            font-size: 20px;
+            color: #667eea;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 12px;
+            min-height: 30px;
+        }
+
+        /* Mobile Responsive Slider */
+        @media (max-width: 768px) {
+            .slider {
+                height: 16px;
+            }
+
+            .slider::-webkit-slider-thumb {
+                width: 36px;
+                height: 36px;
+            }
+
+            .slider::-moz-range-thumb {
+                width: 36px;
+                height: 36px;
+            }
+
+            .slider-labels {
+                font-size: 12px;
+            }
+        }
+
         /* Currency Selector */
         .currency-selector {
             display: flex;
@@ -1171,73 +1266,109 @@
         const competingFactors = {
             id: 'competing_factors',
             html: `
-                <div class="question-text">Rate Each Factor (1-10 Stars)</div>
-                <p class="question-subtext">Rate how you perceive each aspect of indoor growing systems</p>
+                <div class="question-text">Rate Each Factor (1-10 Scale)</div>
+                <p class="question-subtext">Slide to rate how you perceive each aspect of indoor growing systems</p>
 
                 <div class="rating-section">
                     <div class="rating-title">💰 Price (Purchase Cost + Ongoing Costs)</div>
                     <div class="rating-meaning">
-                        • 10 stars: Very expensive / Too high<br>
-                        • 5 stars: Moderate / Fair pricing<br>
-                        • 1 star: Very affordable / Great value
+                        • 10 = Very expensive / Too high<br>
+                        • 5 = Moderate / Fair pricing<br>
+                        • 1 = Very affordable / Great value
                     </div>
-                    <div class="stars-container" id="stars-price"></div>
-                    <div class="star-value" id="value-price">Not rated</div>
+                    <div class="slider-container">
+                        <input type="range" min="1" max="10" value="5" class="slider" id="slider-price" oninput="updateSliderValue('price', this.value)">
+                        <div class="slider-labels">
+                            <span>1 - Very Affordable</span>
+                            <span>10 - Very Expensive</span>
+                        </div>
+                        <div class="slider-value" id="value-price">5</div>
+                    </div>
                 </div>
 
                 <div class="rating-section">
                     <div class="rating-title">⚡ Ease of Use & Setup</div>
                     <div class="rating-meaning">
-                        • 10 stars: Very complicated / Hard to use<br>
-                        • 5 stars: Moderate complexity<br>
-                        • 1 star: Very easy / Simple to use
+                        • 10 = Very complicated / Hard to use<br>
+                        • 5 = Moderate complexity<br>
+                        • 1 = Very easy / Simple to use
                     </div>
-                    <div class="stars-container" id="stars-ease"></div>
-                    <div class="star-value" id="value-ease">Not rated</div>
+                    <div class="slider-container">
+                        <input type="range" min="1" max="10" value="5" class="slider" id="slider-ease" oninput="updateSliderValue('ease', this.value)">
+                        <div class="slider-labels">
+                            <span>1 - Very Easy</span>
+                            <span>10 - Very Complicated</span>
+                        </div>
+                        <div class="slider-value" id="value-ease">5</div>
+                    </div>
                 </div>
 
                 <div class="rating-section">
                     <div class="rating-title">🌱 Food Quality & Variety</div>
                     <div class="rating-meaning">
-                        • 10 stars: Excellent quality / Wide variety<br>
-                        • 5 stars: Good quality / Decent variety<br>
-                        • 1 star: Poor quality / Limited variety
+                        • 10 = Excellent quality / Wide variety<br>
+                        • 5 = Good quality / Decent variety<br>
+                        • 1 = Poor quality / Limited variety
                     </div>
-                    <div class="stars-container" id="stars-quality"></div>
-                    <div class="star-value" id="value-quality">Not rated</div>
+                    <div class="slider-container">
+                        <input type="range" min="1" max="10" value="5" class="slider" id="slider-quality" oninput="updateSliderValue('quality', this.value)">
+                        <div class="slider-labels">
+                            <span>1 - Poor Quality</span>
+                            <span>10 - Excellent Quality</span>
+                        </div>
+                        <div class="slider-value" id="value-quality">5</div>
+                    </div>
                 </div>
 
                 <div class="rating-section">
                     <div class="rating-title">⏱️ Time & Effort (Maintenance + Time to Harvest)</div>
                     <div class="rating-meaning">
-                        • 10 stars: Very time-consuming / High effort<br>
-                        • 5 stars: Moderate time commitment<br>
-                        • 1 star: Minimal time / Very low effort
+                        • 10 = Minimal time / Very low effort<br>
+                        • 5 = Moderate time commitment<br>
+                        • 1 = Very time-consuming / High effort
                     </div>
-                    <div class="stars-container" id="stars-time"></div>
-                    <div class="star-value" id="value-time">Not rated</div>
+                    <div class="slider-container">
+                        <input type="range" min="1" max="10" value="5" class="slider" id="slider-time" oninput="updateSliderValue('time', this.value, true)">
+                        <div class="slider-labels">
+                            <span>1 - High Effort</span>
+                            <span>10 - Low Effort</span>
+                        </div>
+                        <div class="slider-value" id="value-time">5</div>
+                    </div>
                 </div>
 
                 <div class="rating-section">
                     <div class="rating-title">📐 Space & Aesthetics (Footprint + Looks + Design)</div>
                     <div class="rating-meaning">
-                        • 10 stars: Very large / Doesn't look good<br>
-                        • 5 stars: Moderate size / Decent aesthetics<br>
-                        • 1 star: Compact / Beautiful design
+                        • 10 = Compact / Beautiful design<br>
+                        • 5 = Moderate size / Decent aesthetics<br>
+                        • 1 = Very large / Doesn't look good
                     </div>
-                    <div class="stars-container" id="stars-space"></div>
-                    <div class="star-value" id="value-space">Not rated</div>
+                    <div class="slider-container">
+                        <input type="range" min="1" max="10" value="5" class="slider" id="slider-space" oninput="updateSliderValue('space', this.value, true)">
+                        <div class="slider-labels">
+                            <span>1 - Large/Ugly</span>
+                            <span>10 - Compact/Beautiful</span>
+                        </div>
+                        <div class="slider-value" id="value-space">5</div>
+                    </div>
                 </div>
 
                 <div class="rating-section">
                     <div class="rating-title">🤖 Automation & AI (Smart Features + Success Rate)</div>
                     <div class="rating-meaning">
-                        • 10 stars: Fully automated / AI-powered / Guaranteed success<br>
-                        • 5 stars: Some automation / Moderate success rate<br>
-                        • 1 star: Manual / No automation / Uncertain results
+                        • 10 = Fully automated / AI-powered / Guaranteed success<br>
+                        • 5 = Some automation / Moderate success rate<br>
+                        • 1 = Manual / No automation / Uncertain results
                     </div>
-                    <div class="stars-container" id="stars-automation"></div>
-                    <div class="star-value" id="value-automation">Not rated</div>
+                    <div class="slider-container">
+                        <input type="range" min="1" max="10" value="5" class="slider" id="slider-automation" oninput="updateSliderValue('automation', this.value)">
+                        <div class="slider-labels">
+                            <span>1 - Manual</span>
+                            <span>10 - Fully Automated</span>
+                        </div>
+                        <div class="slider-value" id="value-automation">5</div>
+                    </div>
                 </div>
 
                 <div class="navigation">
@@ -1268,14 +1399,15 @@
             document.getElementById('content').innerHTML = section.html;
             updateProgress();
 
-            // Initialize star ratings if on competing factors page
+            // Initialize sliders if on competing factors page
             if (section.id === 'competing_factors') {
-                initStarRating('price');
-                initStarRating('ease');
-                initStarRating('quality');
-                initStarRating('time');
-                initStarRating('space');
-                initStarRating('automation');
+                // Sliders are already initialized in HTML with default value of 5
+                // Save initial values to surveyData
+                ['price', 'ease', 'quality', 'time', 'space', 'automation'].forEach(factor => {
+                    if (!surveyData.ratings[factor]) {
+                        surveyData.ratings[factor] = 5;
+                    }
+                });
             }
 
             // Initialize star rating for Tier 2 satisfaction question
@@ -1477,9 +1609,18 @@
             }
         }
 
-        // Star rating
+        // Slider rating
+        function updateSliderValue(factor, value, reverse = false) {
+            // For reversed scales (time & space), store the reversed value
+            const actualValue = reverse ? (11 - parseInt(value)) : parseInt(value);
+            surveyData.ratings[factor] = actualValue;
+            document.getElementById(`value-${factor}`).textContent = value;
+        }
+
+        // Star rating (for tier2_satisfaction only)
         function initStarRating(factor) {
             const container = document.getElementById(`stars-${factor}`);
+            if (!container) return;
             for (let i = 1; i <= 10; i++) {
                 const star = document.createElement('span');
                 star.className = 'star';

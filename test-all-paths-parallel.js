@@ -21,8 +21,8 @@ async function testTier1Path(browser, testName) {
         await page.click('button:has-text("Male")');
         await page.waitForTimeout(300);
 
-        // Q3: Income (USD)
-        await page.click('button:has-text("$75,000 - $125,000")');
+        // Q3: Income (USD per month)
+        await page.click('button:has-text("$6,300 - $10,400/month")');
         await page.waitForTimeout(300);
 
         // Q4: Family
@@ -98,18 +98,18 @@ async function testTier1Path(browser, testName) {
 
         console.log(`[${testName}] ✅ All Tier 1 questions completed`);
 
-        // Competing Factors - All 6 factors
-        await page.locator('#stars-price .star').nth(7).click();
+        // Competing Factors - All 6 sliders
+        await page.locator('#slider-price').fill('8');
         await page.waitForTimeout(200);
-        await page.locator('#stars-ease .star').nth(5).click();
+        await page.locator('#slider-ease').fill('6');
         await page.waitForTimeout(200);
-        await page.locator('#stars-quality .star').nth(6).click();
+        await page.locator('#slider-quality').fill('7');
         await page.waitForTimeout(200);
-        await page.locator('#stars-time .star').nth(4).click();
+        await page.locator('#slider-time').fill('5');
         await page.waitForTimeout(200);
-        await page.locator('#stars-space .star').nth(3).click();
+        await page.locator('#slider-space').fill('4');
         await page.waitForTimeout(200);
-        await page.locator('#stars-automation .star').nth(8).click();
+        await page.locator('#slider-automation').fill('9');
         await page.waitForTimeout(200);
         await page.click('button:has-text("Next")');
         await page.waitForTimeout(500);
@@ -153,8 +153,8 @@ async function testSatisfiedPath(browser, testName) {
         await page.click('button:has-text("Female")');
         await page.waitForTimeout(300);
 
-        // Q3: Income (USD)
-        await page.click('button:has-text("$125,000 - $200,000")');
+        // Q3: Income (USD per month)
+        await page.click('button:has-text("$10,400 - $16,700/month")');
         await page.waitForTimeout(300);
 
         // Q4: Family
@@ -212,18 +212,18 @@ async function testSatisfiedPath(browser, testName) {
 
         console.log(`[${testName}] ✅ All Satisfied questions completed`);
 
-        // Competing Factors - All 6 factors
-        await page.locator('#stars-price .star').nth(2).click();
+        // Competing Factors - All 6 sliders
+        await page.locator('#slider-price').fill('3');
         await page.waitForTimeout(200);
-        await page.locator('#stars-ease .star').nth(1).click();
+        await page.locator('#slider-ease').fill('2');
         await page.waitForTimeout(200);
-        await page.locator('#stars-quality .star').nth(8).click();
+        await page.locator('#slider-quality').fill('9');
         await page.waitForTimeout(200);
-        await page.locator('#stars-time .star').nth(2).click();
+        await page.locator('#slider-time').fill('3');
         await page.waitForTimeout(200);
-        await page.locator('#stars-space .star').nth(1).click();
+        await page.locator('#slider-space').fill('2');
         await page.waitForTimeout(200);
-        await page.locator('#stars-automation .star').nth(7).click();
+        await page.locator('#slider-automation').fill('8');
         await page.waitForTimeout(200);
         await page.click('button:has-text("Next")');
         await page.waitForTimeout(500);

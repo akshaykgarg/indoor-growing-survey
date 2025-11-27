@@ -2,6 +2,14 @@
  * Blue Ocean Strategy Survey - Google Apps Script
  * Handles all 4 customer tier paths with complete question sets
  *
+ * LATEST UPDATES:
+ * - Income values are now monthly (per month) instead of annual
+ * - Competing factors use slider bars (1-10 scale) instead of star ratings
+ * - Space & Aesthetics scale reversed: 10 = beautiful/compact, 1 = ugly/large
+ * - Time & Effort scale reversed: 10 = low effort, 1 = high effort
+ * - All multi-select questions have prominent "Select ALL that apply" labels
+ * - Back button navigation added to all questions
+ *
  * SETUP INSTRUCTIONS:
  * 1. Open your Google Sheet
  * 2. Go to Extensions > Apps Script
