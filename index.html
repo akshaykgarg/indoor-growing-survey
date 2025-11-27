@@ -393,8 +393,10 @@
                 html: `
                     <div class="question-text">Welcome! 🌱</div>
                     <p class="question-subtext">
-                        This is a prototype of the new survey structure.<br>
-                        You'll see different questions based on your answers.
+                        Thank you for taking the time to share your thoughts!<br><br>
+                        This survey explores your relationship with indoor growing systems and fresh food.<br>
+                        It takes about 5-7 minutes to complete.<br><br>
+                        Your responses will help us understand what matters most to you.
                     </p>
                     <div class="navigation">
                         <button class="next-btn" onclick="nextSection()">Start Survey</button>
@@ -418,7 +420,128 @@
                 `
             },
 
-            // Q2: Ownership
+            // Q2: Gender
+            {
+                id: 'gender',
+                html: `
+                    <div class="question-text">What is your gender?</div>
+                    <div class="button-grid">
+                        <button class="option-btn" onclick="select('gender', 'male')">Male</button>
+                        <button class="option-btn" onclick="select('gender', 'female')">Female</button>
+                        <button class="option-btn" onclick="select('gender', 'non_binary')">Non-binary</button>
+                    </div>
+                `
+            },
+
+            // Q3: Income
+            {
+                id: 'income',
+                html: `
+                    <div class="question-text">What is your household income?</div>
+                    <div class="currency-selector">
+                        <button class="currency-btn active" onclick="selectCurrency('USD')">USD $</button>
+                        <button class="currency-btn" onclick="selectCurrency('AED')">AED</button>
+                        <button class="currency-btn" onclick="selectCurrency('INR')">INR ₹</button>
+                    </div>
+
+                    <div class="income-options active" id="income-USD">
+                        <div class="button-grid">
+                            <button class="option-btn" onclick="select('income', 'under_40k')">Under $40,000</button>
+                            <button class="option-btn" onclick="select('income', '40k-75k')">$40,000 - $75,000</button>
+                            <button class="option-btn" onclick="select('income', '75k-125k')">$75,000 - $125,000</button>
+                            <button class="option-btn" onclick="select('income', '125k-200k')">$125,000 - $200,000</button>
+                            <button class="option-btn" onclick="select('income', 'over_200k')">Over $200,000</button>
+                        </div>
+                    </div>
+
+                    <div class="income-options" id="income-AED">
+                        <div class="button-grid">
+                            <button class="option-btn" onclick="select('income', 'under_147k')">Under 147,000 AED</button>
+                            <button class="option-btn" onclick="select('income', '147k-275k')">147,000 - 275,000 AED</button>
+                            <button class="option-btn" onclick="select('income', '275k-459k')">275,000 - 459,000 AED</button>
+                            <button class="option-btn" onclick="select('income', '459k-734k')">459,000 - 734,000 AED</button>
+                            <button class="option-btn" onclick="select('income', 'over_734k')">Over 734,000 AED</button>
+                        </div>
+                    </div>
+
+                    <div class="income-options" id="income-INR">
+                        <div class="button-grid">
+                            <button class="option-btn" onclick="select('income', 'under_33L')">Under ₹33 Lakhs</button>
+                            <button class="option-btn" onclick="select('income', '33L-62L')">₹33 - ₹62 Lakhs</button>
+                            <button class="option-btn" onclick="select('income', '62L-1.04Cr')">₹62 Lakhs - ₹1.04 Crore</button>
+                            <button class="option-btn" onclick="select('income', '1.04Cr-1.66Cr')">₹1.04 - ₹1.66 Crore</button>
+                            <button class="option-btn" onclick="select('income', 'over_1.66Cr')">Over ₹1.66 Crore</button>
+                        </div>
+                    </div>
+                `
+            },
+
+            // Q4: Family Structure
+            {
+                id: 'family',
+                html: `
+                    <div class="question-text">What is your family structure?</div>
+                    <div class="button-grid">
+                        <button class="option-btn" onclick="select('family', 'single_no_kids')">Single, no children</button>
+                        <button class="option-btn" onclick="select('family', 'single_kids')">Single with children</button>
+                        <button class="option-btn" onclick="select('family', 'couple_no_kids')">Couple, no children</button>
+                        <button class="option-btn" onclick="select('family', 'couple_kids')">Couple with children</button>
+                    </div>
+                `
+            },
+
+            // Q5: Living Situation
+            {
+                id: 'living',
+                html: `
+                    <div class="question-text">What is your living situation?</div>
+                    <div class="button-grid">
+                        <button class="option-btn" onclick="select('living', 'apartment_rent')">Apartment - Rent</button>
+                        <button class="option-btn" onclick="select('living', 'apartment_own')">Apartment - Own</button>
+                        <button class="option-btn" onclick="select('living', 'house_rent')">House - Rent</button>
+                        <button class="option-btn" onclick="select('living', 'house_own')">House - Own</button>
+                    </div>
+                `
+            },
+
+            // Q6: Location Type
+            {
+                id: 'location',
+                html: `
+                    <div class="question-text">What type of area do you live in?</div>
+                    <div class="button-grid">
+                        <button class="option-btn" onclick="select('location', 'urban')">Urban - City center</button>
+                        <button class="option-btn" onclick="select('location', 'suburban')">Suburban - Outside city</button>
+                        <button class="option-btn" onclick="select('location', 'rural')">Rural - Countryside</button>
+                    </div>
+                `
+            },
+
+            // Q7: Psychographics
+            {
+                id: 'psychographics',
+                html: `
+                    <div class="question-text">Which of these describe you?</div>
+                    <p class="question-subtext">Select all that apply</p>
+                    <div class="button-grid">
+                        <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'health')">Health-conscious</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'fitness')">Fitness enthusiast</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'biohacker')">Bio-hacker / Wellness focused</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'chef')">I love cooking</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'organic')">Prefer organic / Local food</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'tech')">Early tech adopter</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'busy')">Busy professional</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'family')">Parent / Family focused</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'sustainable')">Environmentally conscious</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'none', true)">None of these</button>
+                    </div>
+                    <div class="navigation" style="margin-top: 30px;">
+                        <button class="next-btn" onclick="nextSection()">Next</button>
+                    </div>
+                `
+            },
+
+            // Q8: Ownership
             {
                 id: 'ownership',
                 html: `
@@ -488,7 +611,7 @@
             tier1_why_stopped: {
                 id: 'tier1_why_stopped',
                 html: `
-                    <div class="tier-badge">TIER 1: Minimal User - Ready to Jump Ship</div>
+                    
                     <div class="question-text">Why are you barely using it now?</div>
                     <p class="question-subtext">Select all that apply</p>
                     <div class="button-grid">
@@ -508,7 +631,7 @@
             tier1_frustration: {
                 id: 'tier1_frustration',
                 html: `
-                    <div class="tier-badge">TIER 1: Minimal User</div>
+                    
                     <div class="question-text">What's your biggest frustration?</div>
                     <textarea class="text-area" id="frustration-input" placeholder="Tell us your biggest pain point..."></textarea>
                     <div class="navigation">
@@ -520,7 +643,7 @@
             tier1_system: {
                 id: 'tier1_system',
                 html: `
-                    <div class="tier-badge">TIER 1: Minimal User</div>
+                    
                     <div class="question-text">Which system do you currently use?</div>
                     <input type="text" class="text-input" id="tier1-system-input" placeholder="e.g., Gardyn, AeroGarden, Click & Grow, Lettuce Grow, Rise Gardens, DIY">
                     <div class="navigation">
@@ -532,7 +655,7 @@
             tier1_duration: {
                 id: 'tier1_duration',
                 html: `
-                    <div class="tier-badge">TIER 1: Minimal User</div>
+                    
                     <div class="question-text">How long have you been using it?</div>
                     <div class="button-grid">
                         <button class="option-btn" onclick="select('tier1_duration', 'less_3mo')">Less than 3 months</button>
@@ -547,7 +670,7 @@
             tier1_why_bought: {
                 id: 'tier1_why_bought',
                 html: `
-                    <div class="tier-badge">TIER 1: Minimal User</div>
+                    
                     <div class="question-text">What made you buy it originally?</div>
                     <p class="question-subtext">Select all that apply</p>
                     <div class="button-grid">
@@ -569,7 +692,7 @@
             tier1_switching: {
                 id: 'tier1_switching',
                 html: `
-                    <div class="tier-badge">TIER 1: Minimal User</div>
+                    
                     <div class="question-text">Have you considered switching to a different brand or system?</div>
                     <div class="button-grid">
                         <button class="option-btn" onclick="select('tier1_switching', 'actively_researching')">Yes, actively researching alternatives</button>
@@ -583,7 +706,7 @@
             tier1_look_for: {
                 id: 'tier1_look_for',
                 html: `
-                    <div class="tier-badge">TIER 1: Minimal User</div>
+                    
                     <div class="question-text">If you were to replace your system, what would you look for?</div>
                     <p class="question-subtext">Select all that apply</p>
                     <div class="button-grid">
@@ -606,7 +729,7 @@
             tier1_six_months: {
                 id: 'tier1_six_months',
                 html: `
-                    <div class="tier-badge">TIER 1: Minimal User</div>
+                    
                     <div class="question-text">How likely are you to still be using this system 6 months from now?</div>
                     <div class="button-grid">
                         <button class="option-btn" onclick="select('tier1_six_months', 'very_likely')">Very likely - I'm committed</button>
@@ -621,7 +744,7 @@
             tier1_recommend: {
                 id: 'tier1_recommend',
                 html: `
-                    <div class="tier-badge">TIER 1: Minimal User</div>
+                    
                     <div class="question-text">Would you recommend your system to a friend?</div>
                     <div class="button-grid">
                         <button class="option-btn" onclick="select('tier1_recommend', 'definitely_yes')">Definitely yes</button>
@@ -636,7 +759,7 @@
             tier1_what_convince: {
                 id: 'tier1_what_convince',
                 html: `
-                    <div class="tier-badge">TIER 1: Minimal User</div>
+                    
                     <div class="question-text">What would convince you to keep using it actively?</div>
                     <textarea class="text-area" id="tier1-convince-input" placeholder="What would make you an active user again?"></textarea>
                     <div class="navigation">
@@ -649,7 +772,7 @@
             satisfied_system: {
                 id: 'satisfied_system',
                 html: `
-                    <div class="tier-badge">SATISFIED CUSTOMER</div>
+                    
                     <div class="question-text">Which system do you use?</div>
                     <input type="text" class="text-input" id="satisfied-system-input" placeholder="e.g., Gardyn, AeroGarden, Click & Grow, Lettuce Grow">
                     <div class="navigation">
@@ -661,7 +784,7 @@
             satisfied_duration: {
                 id: 'satisfied_duration',
                 html: `
-                    <div class="tier-badge">SATISFIED CUSTOMER</div>
+                    
                     <div class="question-text">How long have you been using it?</div>
                     <div class="button-grid">
                         <button class="option-btn" onclick="select('satisfied_duration', 'less_3mo')">Less than 3 months</button>
@@ -676,7 +799,7 @@
             satisfied_love: {
                 id: 'satisfied_love',
                 html: `
-                    <div class="tier-badge">SATISFIED CUSTOMER</div>
+                    
                     <div class="question-text">What do you love most about it?</div>
                     <p class="question-subtext">Select all that apply</p>
                     <div class="button-grid">
@@ -699,7 +822,7 @@
             satisfied_improve: {
                 id: 'satisfied_improve',
                 html: `
-                    <div class="tier-badge">SATISFIED CUSTOMER</div>
+                    
                     <div class="question-text">What would make it even better?</div>
                     <p class="question-subtext">Select all that apply</p>
                     <div class="button-grid">
@@ -722,7 +845,7 @@
             satisfied_recommend: {
                 id: 'satisfied_recommend',
                 html: `
-                    <div class="tier-badge">SATISFIED CUSTOMER</div>
+                    
                     <div class="question-text">Would you recommend it to a friend?</div>
                     <div class="button-grid">
                         <button class="option-btn" onclick="select('satisfied_recommend', 'definitely_yes')">Definitely yes</button>
@@ -737,7 +860,7 @@
             satisfied_one_thing: {
                 id: 'satisfied_one_thing',
                 html: `
-                    <div class="tier-badge">SATISFIED CUSTOMER</div>
+                    
                     <div class="question-text">If you could improve ONE thing, what would it be?</div>
                     <textarea class="text-area" id="satisfied-one-thing-input" placeholder="What's the one thing that would make it even better?"></textarea>
                     <div class="navigation">
@@ -750,7 +873,7 @@
             tier2_why_not: {
                 id: 'tier2_why_not',
                 html: `
-                    <div class="tier-badge">TIER 2: Refusing - Consciously Rejected</div>
+                    
                     <div class="question-text">You've heard of these but don't own one. Why not?</div>
                     <p class="question-subtext">Select all that apply</p>
                     <div class="button-grid">
@@ -770,7 +893,7 @@
             tier2_current_solution: {
                 id: 'tier2_current_solution',
                 html: `
-                    <div class="tier-badge">TIER 2: Refusing</div>
+                    
                     <div class="question-text">How do you currently get fresh herbs and greens?</div>
                     <div class="button-grid">
                         <button class="option-btn multi-select" onclick="toggleMulti('current', 'grocery')">Grocery store</button>
@@ -788,7 +911,7 @@
             tier2_satisfaction: {
                 id: 'tier2_satisfaction',
                 html: `
-                    <div class="tier-badge">TIER 2: Refusing</div>
+                    
                     <div class="question-text">How satisfied are you with your current solution?</div>
                     <div class="rating-section">
                         <div class="rating-meaning" style="margin-bottom: 15px;">
@@ -808,7 +931,7 @@
             tier2_what_convince: {
                 id: 'tier2_what_convince',
                 html: `
-                    <div class="tier-badge">TIER 2: Refusing</div>
+                    
                     <div class="question-text">What would convince you to buy one?</div>
                     <p class="question-subtext">Select all that apply</p>
                     <div class="button-grid">
@@ -828,7 +951,7 @@
             tier2_grow_interests: {
                 id: 'tier2_grow_interests',
                 html: `
-                    <div class="tier-badge">TIER 2: Refusing</div>
+                    
                     <div class="question-text">If you could grow these at home with minimal effort, which would interest you?</div>
                     <p class="question-subtext">Select all that apply</p>
                     <div class="button-grid">
@@ -850,7 +973,7 @@
             tier2_likelihood: {
                 id: 'tier2_likelihood',
                 html: `
-                    <div class="tier-badge">TIER 2: Refusing</div>
+                    
                     <div class="question-text">How likely would you be to try indoor growing in the next year?</div>
                     <div class="button-grid">
                         <button class="option-btn" onclick="surveyData.responses['tier2_likelihood'] = 'very_likely'; finish()">Very likely - I'll research options</button>
@@ -866,7 +989,7 @@
             tier3_interest: {
                 id: 'tier3_interest',
                 html: `
-                    <div class="tier-badge">TIER 3: Unexplored - New to This</div>
+                    
                     <div class="question-text">Now that you know these exist, how interested are you?</div>
                     <p class="question-subtext">Indoor growing systems let you grow fresh herbs and greens year-round using water, nutrients, and LED lights—no soil needed.</p>
                     <div class="button-grid">
@@ -882,7 +1005,7 @@
             tier3_current_needs: {
                 id: 'tier3_current_needs',
                 html: `
-                    <div class="tier-badge">TIER 3: Unexplored</div>
+                    
                     <div class="question-text">How do you currently handle getting fresh food?</div>
                     <div class="button-grid">
                         <button class="option-btn multi-select" onclick="toggleMulti('needs', 'grocery')">Regular grocery shopping</button>
@@ -900,7 +1023,7 @@
             tier3_describe: {
                 id: 'tier3_describe',
                 html: `
-                    <div class="tier-badge">TIER 3: Unexplored</div>
+                    
                     <div class="question-text">Which of these describe you?</div>
                     <p class="question-subtext">Select all that apply</p>
                     <div class="button-grid">
@@ -923,7 +1046,7 @@
             tier3_produce_spending: {
                 id: 'tier3_produce_spending',
                 html: `
-                    <div class="tier-badge">TIER 3: Unexplored</div>
+                    
                     <div class="question-text">How much do you spend monthly on fresh produce (fruits, vegetables, herbs)?</div>
                     <div class="button-grid">
                         <button class="option-btn" onclick="select('produce_spending', 'under_50')">Under $50</button>
@@ -939,7 +1062,7 @@
             tier3_supplement_spending: {
                 id: 'tier3_supplement_spending',
                 html: `
-                    <div class="tier-badge">TIER 3: Unexplored</div>
+                    
                     <div class="question-text">Do you take vitamins, supplements, or nutritional products?</div>
                     <div class="button-grid">
                         <button class="option-btn" onclick="select('supplements', 'regularly')">Yes, regularly - I spend $50+ monthly</button>
@@ -953,7 +1076,7 @@
             tier3_what_valuable: {
                 id: 'tier3_what_valuable',
                 html: `
-                    <div class="tier-badge">TIER 3: Unexplored</div>
+                    
                     <div class="question-text">What would be most valuable to you about growing your own food at home?</div>
                     <p class="question-subtext">Select all that apply</p>
                     <div class="button-grid">
@@ -976,7 +1099,7 @@
             tier3_biggest_concerns: {
                 id: 'tier3_biggest_concerns',
                 html: `
-                    <div class="tier-badge">TIER 3: Unexplored</div>
+                    
                     <div class="question-text">What would be your biggest concerns or barriers to trying this?</div>
                     <p class="question-subtext">Select all that apply</p>
                     <div class="button-grid">
@@ -999,7 +1122,7 @@
             tier3_likelihood_and_price: {
                 id: 'tier3_likelihood_and_price',
                 html: `
-                    <div class="tier-badge">TIER 3: Unexplored</div>
+                    
                     <div class="question-text">How likely would you be to try an indoor growing system?</div>
                     <div class="button-grid">
                         <button class="option-btn" onclick="select('tier3_likelihood', 'very_likely')">Very likely - I'd seriously consider it</button>
@@ -1098,99 +1221,6 @@
 
                 <div class="navigation">
                     <button class="next-btn" onclick="nextSection()">Next</button>
-                </div>
-            `
-        };
-
-        // Demographics with Currency
-        const demographics = {
-            id: 'demographics',
-            html: `
-                <div class="question-text">Demographics</div>
-
-                <div class="question-subtext" style="margin-top: 30px;"><strong>Household Income:</strong></div>
-                <div class="currency-selector">
-                    <button class="currency-btn active" onclick="selectCurrency('USD')">USD $</button>
-                    <button class="currency-btn" onclick="selectCurrency('AED')">AED</button>
-                    <button class="currency-btn" onclick="selectCurrency('INR')">INR ₹</button>
-                </div>
-
-                <div class="income-options active" id="income-USD">
-                    <div class="button-grid">
-                        <button class="option-btn" onclick="selectDemo('income', 'under_40k')">Under $40,000</button>
-                        <button class="option-btn" onclick="selectDemo('income', '40k-75k')">$40,000 - $75,000</button>
-                        <button class="option-btn" onclick="selectDemo('income', '75k-125k')">$75,000 - $125,000</button>
-                        <button class="option-btn" onclick="selectDemo('income', '125k-200k')">$125,000 - $200,000</button>
-                        <button class="option-btn" onclick="selectDemo('income', 'over_200k')">Over $200,000</button>
-                    </div>
-                </div>
-
-                <div class="income-options" id="income-AED">
-                    <div class="button-grid">
-                        <button class="option-btn" onclick="selectDemo('income', 'under_147k')">Under 147,000 AED</button>
-                        <button class="option-btn" onclick="selectDemo('income', '147k-275k')">147,000 - 275,000 AED</button>
-                        <button class="option-btn" onclick="selectDemo('income', '275k-459k')">275,000 - 459,000 AED</button>
-                        <button class="option-btn" onclick="selectDemo('income', '459k-734k')">459,000 - 734,000 AED</button>
-                        <button class="option-btn" onclick="selectDemo('income', 'over_734k')">Over 734,000 AED</button>
-                    </div>
-                </div>
-
-                <div class="income-options" id="income-INR">
-                    <div class="button-grid">
-                        <button class="option-btn" onclick="selectDemo('income', 'under_33L')">Under ₹33 Lakhs</button>
-                        <button class="option-btn" onclick="selectDemo('income', '33L-62L')">₹33 - ₹62 Lakhs</button>
-                        <button class="option-btn" onclick="selectDemo('income', '62L-1.04Cr')">₹62 Lakhs - ₹1.04 Crore</button>
-                        <button class="option-btn" onclick="selectDemo('income', '1.04Cr-1.66Cr')">₹1.04 - ₹1.66 Crore</button>
-                        <button class="option-btn" onclick="selectDemo('income', 'over_1.66Cr')">Over ₹1.66 Crore</button>
-                    </div>
-                </div>
-
-                <div class="question-subtext" style="margin-top: 30px;"><strong>Gender:</strong></div>
-                <div class="button-grid">
-                    <button class="option-btn" onclick="selectDemo('gender', 'male')">Male</button>
-                    <button class="option-btn" onclick="selectDemo('gender', 'female')">Female</button>
-                    <button class="option-btn" onclick="selectDemo('gender', 'non_binary')">Non-binary</button>
-                </div>
-
-                <div class="question-subtext" style="margin-top: 30px;"><strong>Family Structure:</strong></div>
-                <div class="button-grid">
-                    <button class="option-btn" onclick="selectDemo('family', 'single_no_kids')">Single, no children</button>
-                    <button class="option-btn" onclick="selectDemo('family', 'single_kids')">Single with children</button>
-                    <button class="option-btn" onclick="selectDemo('family', 'couple_no_kids')">Couple, no children</button>
-                    <button class="option-btn" onclick="selectDemo('family', 'couple_kids')">Couple with children</button>
-                </div>
-
-                <div class="question-subtext" style="margin-top: 30px;"><strong>Living Situation:</strong></div>
-                <div class="button-grid">
-                    <button class="option-btn" onclick="selectDemo('living', 'apartment_rent')">Apartment - Rent</button>
-                    <button class="option-btn" onclick="selectDemo('living', 'apartment_own')">Apartment - Own</button>
-                    <button class="option-btn" onclick="selectDemo('living', 'house_rent')">House - Rent</button>
-                    <button class="option-btn" onclick="selectDemo('living', 'house_own')">House - Own</button>
-                </div>
-
-                <div class="question-subtext" style="margin-top: 30px;"><strong>Location Type:</strong></div>
-                <div class="button-grid">
-                    <button class="option-btn" onclick="selectDemo('location', 'urban')">Urban - City center</button>
-                    <button class="option-btn" onclick="selectDemo('location', 'suburban')">Suburban - Outside city</button>
-                    <button class="option-btn" onclick="selectDemo('location', 'rural')">Rural - Countryside</button>
-                </div>
-
-                <div class="question-subtext" style="margin-top: 30px;"><strong>Which of these describe you? (Select all that apply)</strong></div>
-                <div class="button-grid">
-                    <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'health')">Health-conscious</button>
-                    <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'fitness')">Fitness enthusiast</button>
-                    <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'biohacker')">Bio-hacker / Wellness focused</button>
-                    <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'chef')">I love cooking</button>
-                    <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'organic')">Prefer organic / Local food</button>
-                    <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'tech')">Early tech adopter</button>
-                    <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'busy')">Busy professional</button>
-                    <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'family')">Parent / Family focused</button>
-                    <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'sustainable')">Environmentally conscious</button>
-                    <button class="option-btn multi-select" onclick="toggleMulti('demo_psycho', 'none', true)">None of these</button>
-                </div>
-
-                <div class="navigation" style="margin-top: 40px;">
-                    <button class="next-btn" onclick="finish()">Submit Survey</button>
                 </div>
             `
         };
@@ -1484,27 +1514,18 @@
         function finish() {
             // Tier 3 skip logic: Skip competing factors (they have no product knowledge)
             if (surveyData.customerTier === 'TIER3') {
-                // Tier 3: Skip competing factors, go straight to demographics
-                if (!sections.find(s => s.id === 'demographics')) {
-                    sections.push(demographics, completion);
-                    nextSection();
-                } else {
-                    // Show completion
-                    surveyData.completedAt = new Date().toISOString();
-                    sections.push(completion);
-                    nextSection();
+                // Tier 3: Skip competing factors, go straight to completion
+                surveyData.completedAt = new Date().toISOString();
+                sections.push(completion);
+                nextSection();
 
-                    // Send data to Google Sheets
-                    submitSurvey();
-                    console.log('Survey completed:', surveyData);
-                }
+                // Send data to Google Sheets
+                submitSurvey();
+                console.log('Survey completed:', surveyData);
             } else {
-                // All other tiers: Show competing factors, then demographics
+                // All other tiers: Show competing factors, then completion
                 if (!sections.find(s => s.id === 'competing_factors')) {
-                    sections.push(competingFactors, demographics, completion);
-                    nextSection();
-                } else if (!sections.find(s => s.id === 'demographics')) {
-                    sections.push(demographics, completion);
+                    sections.push(competingFactors, completion);
                     nextSection();
                 } else {
                     // Show completion

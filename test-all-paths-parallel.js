@@ -13,11 +13,39 @@ async function testTier1Path(browser, testName) {
         await page.click('button:has-text("Start Survey")');
         await page.waitForTimeout(300);
 
-        // Age
+        // Q1: Age
         await page.click('button:has-text("25-34")');
         await page.waitForTimeout(300);
 
-        // Ownership: Yes
+        // Q2: Gender
+        await page.click('button:has-text("Male")');
+        await page.waitForTimeout(300);
+
+        // Q3: Income (USD)
+        await page.click('button:has-text("$75,000 - $125,000")');
+        await page.waitForTimeout(300);
+
+        // Q4: Family
+        await page.click('button:has-text("Couple, no children")');
+        await page.waitForTimeout(300);
+
+        // Q5: Living
+        await page.click('button:has-text("Apartment - Rent")');
+        await page.waitForTimeout(300);
+
+        // Q6: Location
+        await page.click('button:has-text("Urban - City center")');
+        await page.waitForTimeout(300);
+
+        // Q7: Psychographics (multi-select)
+        await page.click('button:has-text("Health-conscious")');
+        await page.waitForTimeout(200);
+        await page.click('button:has-text("Busy professional")');
+        await page.waitForTimeout(200);
+        await page.click('button:has-text("Next")');
+        await page.waitForTimeout(300);
+
+        // Q8: Ownership: Yes
         await page.click('button:has-text("Yes, I currently use one")');
         await page.waitForTimeout(300);
 
@@ -88,22 +116,8 @@ async function testTier1Path(browser, testName) {
 
         console.log(`[${testName}] ✅ Competing factors rated`);
 
-        // Demographics
-        await page.click('button:has-text("$75,000 - $125,000")');
-        await page.waitForTimeout(300);
-        await page.click('button:has-text("Male")');
-        await page.waitForTimeout(300);
-        await page.click('button:has-text("Couple, no children")');
-        await page.waitForTimeout(300);
-        await page.click('button:has-text("Apartment - Rent")');
-        await page.waitForTimeout(300);
-        await page.click('button:has-text("Urban - City center")');
-        await page.waitForTimeout(300);
-        await page.click('button:has-text("Health-conscious")');
-        await page.waitForTimeout(300);
-
-        await page.click('button:has-text("Submit Survey")');
-        await page.waitForTimeout(1000);
+        // No demographics section - already filled at the start
+        await page.waitForTimeout(500);
 
         const completionVisible = await page.locator('text=Thank You!').isVisible();
         console.log(`[${testName}] ${completionVisible ? '✅ COMPLETED!' : '❌ FAILED'}`);
@@ -131,9 +145,39 @@ async function testSatisfiedPath(browser, testName) {
         await page.click('button:has-text("Start Survey")');
         await page.waitForTimeout(300);
 
+        // Q1: Age
         await page.click('button:has-text("35-44")');
         await page.waitForTimeout(300);
 
+        // Q2: Gender
+        await page.click('button:has-text("Female")');
+        await page.waitForTimeout(300);
+
+        // Q3: Income (USD)
+        await page.click('button:has-text("$125,000 - $200,000")');
+        await page.waitForTimeout(300);
+
+        // Q4: Family
+        await page.click('button:has-text("Couple with children")');
+        await page.waitForTimeout(300);
+
+        // Q5: Living
+        await page.click('button:has-text("House - Own")');
+        await page.waitForTimeout(300);
+
+        // Q6: Location
+        await page.click('button:has-text("Suburban - Outside city")');
+        await page.waitForTimeout(300);
+
+        // Q7: Psychographics (multi-select)
+        await page.click('button:has-text("Health-conscious")');
+        await page.waitForTimeout(200);
+        await page.click('button:has-text("Parent / Family focused")');
+        await page.waitForTimeout(200);
+        await page.click('button:has-text("Next")');
+        await page.waitForTimeout(300);
+
+        // Q8: Ownership
         await page.click('button:has-text("Yes, I currently use one")');
         await page.waitForTimeout(300);
 
@@ -184,21 +228,8 @@ async function testSatisfiedPath(browser, testName) {
         await page.click('button:has-text("Next")');
         await page.waitForTimeout(500);
 
-        await page.click('button:has-text("$125,000 - $200,000")');
-        await page.waitForTimeout(300);
-        await page.click('button:has-text("Female")');
-        await page.waitForTimeout(300);
-        await page.click('button:has-text("Couple with children")');
-        await page.waitForTimeout(300);
-        await page.click('button:has-text("House - Own")');
-        await page.waitForTimeout(300);
-        await page.click('button:has-text("Suburban - Outside city")');
-        await page.waitForTimeout(300);
-        await page.click('button:has-text("Health-conscious")');
-        await page.waitForTimeout(300);
-
-        await page.click('button:has-text("Submit Survey")');
-        await page.waitForTimeout(1000);
+        // No demographics section - already filled at the start
+        await page.waitForTimeout(500);
 
         const completionVisible = await page.locator('text=Thank You!').isVisible();
         console.log(`[${testName}] ${completionVisible ? '✅ COMPLETED!' : '❌ FAILED'}`);

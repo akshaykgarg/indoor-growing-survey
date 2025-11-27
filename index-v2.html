@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indoor Growing Systems Survey - Blue Ocean Strategy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #2d3748;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-section {
+            display: none;
+            animation: slideIn 0.4s ease;
+        }
+
+        .question-section.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .question-subtext {
+            font-size: 15px;
+            color: #718096;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .product-images {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .product-card {
+            text-align: center;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card p {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .option-btn {
+            padding: 18px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .option-btn.selected {
+            background: #48bb78;
+            color: white;
+            border-color: #48bb78;
+        }
+
+        .option-btn.multi-select.selected {
+            background: #48bb78;
+            border-color: #48bb78;
+        }
+
+        .text-input, .text-area {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            margin: 15px 0;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .text-input:focus, .text-area:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .text-area {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Star Rating Styles */
+        .rating-section {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f7fafc;
+            border-radius: 12px;
+        }
+
+        .rating-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rating-meaning {
+            font-size: 13px;
+            color: #718096;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .stars-container {
+            display: flex;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .star {
+            font-size: 36px;
+            cursor: pointer;
+            color: #cbd5e0;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #fbbf24;
+            transform: scale(1.1);
+        }
+
+        .star-value {
+            font-size: 16px;
+            color: #667eea;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        /* Currency Selector */
+        .currency-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .currency-btn {
+            padding: 10px 20px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .currency-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        .back-btn, .next-btn {
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .back-btn:hover {
+            background: #cbd5e0;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex: 1;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .next-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .completion {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .completion h2 {
+            color: #48bb78;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .completion p {
+            font-size: 18px;
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            .button-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-images {
+                flex-direction: column;
+            }
+
+            .stars-container {
+                flex-wrap: wrap;
+            }
+
+            .star {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Indoor Growing Systems Survey</h1>
+            <p>Help us understand your experience with indoor growing systems</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <!-- WELCOME SCREEN -->
+        <div class="question-section active" id="section-welcome">
+            <div class="question-text">Welcome! 🌱</div>
+            <p class="question-subtext">
+                This survey takes about 5-7 minutes. Your honest feedback will help us understand
+                the indoor growing market and improve future products.
+            </p>
+            <div class="navigation">
+                <button class="next-btn" onclick="startSurvey()">Start Survey</button>
+            </div>
+        </div>
+
+        <!-- Q1: AGE RANGE -->
+        <div class="question-section" id="section-age">
+            <div class="question-text">What is your age range?</div>
+            <div class="button-grid">
+                <button class="option-btn" onclick="selectAge('18-24')">18-24</button>
+                <button class="option-btn" onclick="selectAge('25-34')">25-34</button>
+                <button class="option-btn" onclick="selectAge('35-44')">35-44</button>
+                <button class="option-btn" onclick="selectAge('45-54')">45-54</button>
+                <button class="option-btn" onclick="selectAge('55-64')">55-64</button>
+                <button class="option-btn" onclick="selectAge('65+')">65+</button>
+            </div>
+        </div>
+
+        <!-- Q2: OWNERSHIP -->
+        <div class="question-section" id="section-ownership">
+            <div class="question-text">Do you currently own or use an indoor growing system for plants?</div>
+            <p class="question-subtext">Systems like these:</p>
+
+            <div class="product-images">
+                <div class="product-card">
+                    <img src="https://mygardyn.com/wp-content/uploads/2025/10/GEN-4-Hero-Desktop-930.jpg" alt="Gardyn">
+                    <p>Gardyn</p>
+                </div>
+                <div class="product-card">
+                    <img src="https://www.clickandgrow.com/cdn/shop/files/SG9_white_lettuce_basil_tomato_large_b7a23fbc-7654-48ee-9ff4-144007f7fac7.jpg?v=1760955240&width=1200" alt="AeroGarden">
+                    <p>AeroGarden</p>
+                </div>
+            </div>
+
+            <div class="button-grid">
+                <button class="option-btn" onclick="selectOwnership('yes')">✅ Yes, I currently use one</button>
+                <button class="option-btn" onclick="selectOwnership('no')">❌ No, I don't use one</button>
+            </div>
+        </div>
+
+        <!-- Q3: USAGE FREQUENCY (for owners) -->
+        <div class="question-section" id="section-usage">
+            <div class="question-text">How often do you currently use it?</div>
+            <div class="button-grid">
+                <button class="option-btn" onclick="selectUsage('daily')">Daily - actively growing and maintaining</button>
+                <button class="option-btn" onclick="selectUsage('weekly')">Weekly - checking regularly</button>
+                <button class="option-btn" onclick="selectUsage('monthly')">Monthly - minimal maintenance</button>
+                <button class="option-btn" onclick="selectUsage('idle')">Sitting idle / Not using anymore</button>
+            </div>
+        </div>
+
+        <!-- Q3B: SATISFACTION (for minimal/idle users) -->
+        <div class="question-section" id="section-satisfaction-check">
+            <div class="question-text">Overall, how satisfied are you with your system?</div>
+            <div class="button-grid">
+                <button class="option-btn" onclick="selectSatisfaction('very_satisfied')">Very satisfied</button>
+                <button class="option-btn" onclick="selectSatisfaction('satisfied')">Satisfied</button>
+                <button class="option-btn" onclick="selectSatisfaction('neutral')">Neutral</button>
+                <button class="option-btn" onclick="selectSatisfaction('dissatisfied')">Dissatisfied</button>
+                <button class="option-btn" onclick="selectSatisfaction('very_dissatisfied')">Very dissatisfied</button>
+            </div>
+        </div>
+
+        <!-- Q4: AWARENESS (for non-owners) -->
+        <div class="question-section" id="section-awareness">
+            <div class="question-text">Have you heard of or seen indoor growing systems before today?</div>
+            <div class="button-grid">
+                <button class="option-btn" onclick="selectAwareness('yes')">Yes, I know what they are</button>
+                <button class="option-btn" onclick="selectAwareness('no')">No, this is new to me</button>
+            </div>
+        </div>
+
+        <!-- This is where tier-specific questions will be inserted dynamically -->
+        <div id="tier-questions-container"></div>
+
+        <!-- COMPLETION SCREEN -->
+        <div class="question-section" id="section-complete">
+            <div class="completion">
+                <h2>Thank You! 🎉</h2>
+                <p>
+                    Your responses have been saved successfully.<br>
+                    Thank you for taking the time to share your insights!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Survey Data Storage
+        const surveyData = {
+            startTime: new Date().toISOString(),
+            age: '',
+            ownership: '',
+            customerTier: '', // EXISTING_SATISFIED, TIER1, TIER2, TIER3
+            usage: '',
+            satisfaction: '',
+            awareness: '',
+            tier1: {},
+            tier2: {},
+            tier3: {},
+            satisfied: {},
+            ratings: {},
+            demographics: {},
+            selectedMultiOptions: {},
+            navigationPath: [],
+            currency: 'USD'
+        };
+
+        let currentSection = 'section-welcome';
+        let totalSections = 0;
+        let completedSections = 0;
+
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.question-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            currentSection = sectionId;
+            surveyData.navigationPath.push(sectionId);
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+
+        function updateProgress() {
+            completedSections++;
+            const progress = (completedSections / totalSections) * 100;
+            document.getElementById('progressBar').style.width = Math.min(progress, 100) + '%';
+        }
+
+        function startSurvey() {
+            totalSections = 25; // Approximate
+            showSection('section-age');
+        }
+
+        // Q1: Age
+        function selectAge(age) {
+            surveyData.age = age;
+            showSection('section-ownership');
+        }
+
+        // Q2: Ownership
+        function selectOwnership(answer) {
+            surveyData.ownership = answer;
+            if (answer === 'yes') {
+                showSection('section-usage');
+            } else {
+                showSection('section-awareness');
+            }
+        }
+
+        // Q3: Usage Frequency
+        function selectUsage(frequency) {
+            surveyData.usage = frequency;
+            if (frequency === 'daily' || frequency === 'weekly') {
+                // Satisfied customer path
+                surveyData.customerTier = 'EXISTING_SATISFIED';
+                loadSatisfiedCustomerQuestions();
+            } else {
+                // Check satisfaction
+                showSection('section-satisfaction-check');
+            }
+        }
+
+        // Q3B: Satisfaction Check
+        function selectSatisfaction(level) {
+            surveyData.satisfaction = level;
+            if (level === 'very_satisfied' || level === 'satisfied') {
+                surveyData.customerTier = 'EXISTING_SATISFIED';
+                loadSatisfiedCustomerQuestions();
+            } else {
+                // Tier 1: Fed up minimal users
+                surveyData.customerTier = 'TIER1';
+                loadTier1Questions();
+            }
+        }
+
+        // Q4: Awareness
+        function selectAwareness(answer) {
+            surveyData.awareness = answer;
+            if (answer === 'no') {
+                // Tier 3: Unexplored
+                surveyData.customerTier = 'TIER3';
+                loadTier3Questions();
+            } else {
+                // Tier 2: Refusing
+                surveyData.customerTier = 'TIER2';
+                loadTier2Questions();
+            }
+        }
+
+        // Load tier-specific questions dynamically
+        function loadTier1Questions() {
+            const container = document.getElementById('tier-questions-container');
+            container.innerHTML = `
+                <!-- T1-Q1: System Name -->
+                <div class="question-section" id="t1-system">
+                    <div class="question-text">Which system do you currently use?</div>
+                    <input type="text" class="text-input" id="t1-system-input"
+                           placeholder="e.g., Gardyn, AeroGarden, Click & Grow, Lettuce Grow, Rise Gardens, DIY">
+                    <div class="navigation">
+                        <button class="next-btn" onclick="saveT1System()">Next</button>
+                    </div>
+                </div>
+
+                <!-- T1-Q2: Duration -->
+                <div class="question-section" id="t1-duration">
+                    <div class="question-text">How long have you been using it?</div>
+                    <div class="button-grid">
+                        <button class="option-btn" onclick="saveT1('duration', 'less_than_3_months')">Less than 3 months</button>
+                        <button class="option-btn" onclick="saveT1('duration', '3-6_months')">3-6 months</button>
+                        <button class="option-btn" onclick="saveT1('duration', '6-12_months')">6-12 months</button>
+                        <button class="option-btn" onclick="saveT1('duration', '1-2_years')">1-2 years</button>
+                        <button class="option-btn" onclick="saveT1('duration', '2+_years')">2+ years</button>
+                    </div>
+                </div>
+
+                <!-- T1-Q3: Why bought -->
+                <div class="question-section" id="t1-why-bought">
+                    <div class="question-text">What made you buy it originally?</div>
+                    <p class="question-subtext">Select all that apply</p>
+                    <div class="button-grid">
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_bought', 'fresh_herbs', this)">Fresh herbs/vegetables year-round</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_bought', 'healthier_food', this)">Healthier, pesticide-free food</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_bought', 'save_money', this)">Save money on groceries</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_bought', 'fun_hobby', this)">Fun hobby / Learning experience</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_bought', 'sustainability', this)">Sustainability / Environmental impact</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_bought', 'medicinal_herbs', this)">Medicinal herbs / Supplements</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_bought', 'limited_space', this)">Limited outdoor space</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_bought', 'gift', this)">Gift / Impulse purchase</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_bought', 'other', this)">Other</button>
+                    </div>
+                    <div class="navigation">
+                        <button class="next-btn" onclick="showSection('t1-why-stopped')">Next</button>
+                    </div>
+                </div>
+
+                <!-- T1-Q4: Why stopped using -->
+                <div class="question-section" id="t1-why-stopped">
+                    <div class="question-text">Why are you barely using it now?</div>
+                    <p class="question-subtext">Select all that apply - this is critical for us to understand</p>
+                    <div class="button-grid">
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_stopped', 'expensive_maintain', this)">Too expensive to maintain (pods, nutrients, etc.)</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_stopped', 'too_complicated', this)">Too complicated / Technical difficulties</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_stopped', 'plants_dying', this)">Pods/plants keep dying</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_stopped', 'too_much_time', this)">Takes too much time to maintain</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_stopped', 'too_much_space', this)">Takes too much space</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_stopped', 'not_worth_cost', this)">Not worth the cost vs buying produce</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_stopped', 'novelty_wore_off', this)">Novelty wore off</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_stopped', 'poor_support', this)">Poor customer service</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_stopped', 'energy_bills', this)">Energy bills too high</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_stopped', 'limited_variety', this)">Limited plant variety</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_why_stopped', 'other', this)">Other</button>
+                    </div>
+                    <div class="navigation">
+                        <button class="next-btn" onclick="showSection('t1-frustration')">Next</button>
+                    </div>
+                </div>
+
+                <!-- T1-Q5: Biggest frustration -->
+                <div class="question-section" id="t1-frustration">
+                    <div class="question-text">What's the biggest frustration or pain point?</div>
+                    <textarea class="text-area" id="t1-frustration-input"
+                              placeholder="Tell us your biggest pain point..."></textarea>
+                    <div class="navigation">
+                        <button class="next-btn" onclick="saveT1Frustration()">Next</button>
+                    </div>
+                </div>
+
+                <!-- T1-Q6: Switching -->
+                <div class="question-section" id="t1-switching">
+                    <div class="question-text">Have you considered switching to a different brand or system?</div>
+                    <div class="button-grid">
+                        <button class="option-btn" onclick="saveT1('switching', 'actively_researching')">Yes, actively researching alternatives</button>
+                        <button class="option-btn" onclick="saveT1('switching', 'thinking_about_it')">Yes, thinking about it</button>
+                        <button class="option-btn" onclick="saveT1('switching', 'might_stop_altogether')">No, but I might stop using indoor growing altogether</button>
+                        <button class="option-btn" onclick="saveT1('switching', 'committed')">No, I'm committed to making this work</button>
+                    </div>
+                </div>
+
+                <!-- T1-Q7: What would you look for -->
+                <div class="question-section" id="t1-look-for">
+                    <div class="question-text">If you were to replace your system, what would you look for?</div>
+                    <p class="question-subtext">Select all that apply</p>
+                    <div class="button-grid">
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_look_for', 'lower_price', this)">Much lower price (initial + ongoing)</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_look_for', 'easier_use', this)">Easier to use / Less technical</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_look_for', 'low_maintenance', this)">Lower maintenance time (under 5 min/day)</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_look_for', 'better_support', this)">Better customer support</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_look_for', 'guaranteed_success', this)">Guaranteed success rate / Easier to grow</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_look_for', 'more_variety', this)">More plant variety options</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_look_for', 'lower_energy', this)">Lower energy consumption</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_look_for', 'better_quality', this)">Better quality/design</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_look_for', 'giving_up', this, true)">Nothing - I'm giving up on indoor growing</button>
+                        <button class="option-btn multi-select" onclick="toggleMulti('t1_look_for', 'other', this)">Other</button>
+                    </div>
+                    <div class="navigation">
+                        <button class="next-btn" onclick="showSection('t1-six-months')">Next</button>
+                    </div>
+                </div>
+
+                <!-- T1-Q8: Six months from now -->
+                <div class="question-section" id="t1-six-months">
+                    <div class="question-text">How likely are you to still be using this system 6 months from now?</div>
+                    <div class="button-grid">
+                        <button class="option-btn" onclick="saveT1('six_months', 'very_likely')">Very likely - I'm committed</button>
+                        <button class="option-btn" onclick="saveT1('six_months', 'somewhat_likely')">Somewhat likely - Depends on results</button>
+                        <button class="option-btn" onclick="saveT1('six_months', 'not_sure')">Not sure - On the fence</button>
+                        <button class="option-btn" onclick="saveT1('six_months', 'unlikely')">Unlikely - Probably will stop</button>
+                        <button class="option-btn" onclick="saveT1('six_months', 'very_unlikely')">Very unlikely - Already stopped</button>
+                    </div>
+                </div>
+
+                <!-- T1-Q9: Recommend -->
+                <div class="question-section" id="t1-recommend">
+                    <div class="question-text">Would you recommend your system to a friend?</div>
+                    <div class="button-grid">
+                        <button class="option-btn" onclick="saveT1('recommend', 'definitely_yes')">Definitely yes</button>
+                        <button class="option-btn" onclick="saveT1('recommend', 'probably_yes')">Probably yes</button>
+                        <button class="option-btn" onclick="saveT1('recommend', 'not_sure')">Not sure</button>
+                        <button class="option-btn" onclick="saveT1('recommend', 'probably_not')">Probably not</button>
+                        <button class="option-btn" onclick="saveT1('recommend', 'definitely_not')">Definitely not</button>
+                    </div>
+                </div>
+
+                <!-- T1-Q10: What would convince you -->
+                <div class="question-section" id="t1-convince">
+                    <div class="question-text">What would convince you to keep using it actively?</div>
+                    <textarea class="text-area" id="t1-convince-input"
+                              placeholder="What would make you an active user again?"></textarea>
+                    <div class="navigation">
+                        <button class="next-btn" onclick="saveT1Convince()">Next</button>
+                    </div>
+                </div>
+            `;
+            showSection('t1-system');
+        }
+
+        // T1 Save functions
+        function saveT1System() {
+            surveyData.tier1.system = document.getElementById('t1-system-input').value;
+            showSection('t1-duration');
+        }
+
+        function saveT1(key, value) {
+            surveyData.tier1[key] = value;
+            const nextSections = {
+                'duration': 't1-why-bought',
+                'switching': 't1-look-for',
+                'six_months': 't1-recommend',
+                'recommend': 't1-convince'
+            };
+            if (nextSections[key]) {
+                showSection(nextSections[key]);
+            }
+        }
+
+        function saveT1Frustration() {
+            surveyData.tier1.frustration = document.getElementById('t1-frustration-input').value;
+            showSection('t1-switching');
+        }
+
+        function saveT1Convince() {
+            surveyData.tier1.convince = document.getElementById('t1-convince-input').value;
+            loadCompetingFactors();
+        }
+
+        // Multi-select toggle with auto-deselect for "none" options
+        function toggleMulti(category, value, button, isNoneOption = false) {
+            if (!surveyData.selectedMultiOptions[category]) {
+                surveyData.selectedMultiOptions[category] = [];
+            }
+
+            const options = surveyData.selectedMultiOptions[category];
+            const index = options.indexOf(value);
+
+            if (isNoneOption) {
+                // If "None" type option is clicked, deselect all others
+                if (index === -1) {
+                    // Selecting this option
+                    surveyData.selectedMultiOptions[category] = [value];
+                    // Deselect all other buttons
+                    const allButtons = button.parentElement.querySelectorAll('.multi-select');
+                    allButtons.forEach(btn => {
+                        if (btn !== button) {
+                            btn.classList.remove('selected');
+                        }
+                    });
+                    button.classList.add('selected');
+                } else {
+                    // Deselecting
+                    options.splice(index, 1);
+                    button.classList.remove('selected');
+                }
+            } else {
+                // Regular option clicked
+                // First, remove any "none" type options
+                const noneOptions = ['giving_up', 'none_of_these', 'not_interested'];
+                noneOptions.forEach(noneOpt => {
+                    const noneIndex = options.indexOf(noneOpt);
+                    if (noneIndex > -1) {
+                        options.splice(noneIndex, 1);
+                        // Deselect the none button
+                        const noneButton = button.parentElement.querySelector(`[onclick*="'${noneOpt}'"]`);
+                        if (noneButton) noneButton.classList.remove('selected');
+                    }
+                });
+
+                // Toggle this option
+                if (index === -1) {
+                    options.push(value);
+                    button.classList.add('selected');
+                } else {
+                    options.splice(index, 1);
+                    button.classList.remove('selected');
+                }
+            }
+        }
+
+        // Satisfied Customer Questions (placeholder - will implement similarly)
+        function loadSatisfiedCustomerQuestions() {
+            // TODO: Implement satisfied customer path
+            // For now, skip to competing factors
+            loadCompetingFactors();
+        }
+
+        // Tier 2 Questions (placeholder - will implement similarly)
+        function loadTier2Questions() {
+            // TODO: Implement tier 2 path
+            // For now, skip to competing factors
+            loadCompetingFactors();
+        }
+
+        // Tier 3 Questions (placeholder - will implement similarly)
+        function loadTier3Questions() {
+            // TODO: Implement tier 3 path
+            // For now, skip to competing factors
+            loadCompetingFactors();
+        }
+
+        // Competing Factors
+        function loadCompetingFactors() {
+            const container = document.getElementById('tier-questions-container');
+            container.innerHTML += `
+                <div class="question-section" id="competing-factors">
+                    <div class="question-text">Rate Each Factor</div>
+                    <p class="question-subtext">
+                        Rate each factor from 1-10 using stars, where your rating represents how you perceive that aspect
+                    </p>
+
+                    <!-- Factor 1: Price -->
+                    <div class="rating-section">
+                        <div class="rating-title">💰 Price (Purchase Cost + Ongoing Costs)</div>
+                        <div class="rating-meaning">
+                            • 10 stars: Very expensive / Too high<br>
+                            • 5 stars: Moderate / Fair pricing<br>
+                            • 1 star: Very affordable / Great value
+                        </div>
+                        <div class="stars-container" id="stars-price"></div>
+                        <div class="star-value" id="value-price">Not rated</div>
+                    </div>
+
+                    <!-- Factor 2: Ease of Use -->
+                    <div class="rating-section">
+                        <div class="rating-title">⚡ Ease of Use & Setup</div>
+                        <div class="rating-meaning">
+                            • 10 stars: Very complicated / Hard to use<br>
+                            • 5 stars: Moderate complexity<br>
+                            • 1 star: Very easy / Simple to use
+                        </div>
+                        <div class="stars-container" id="stars-ease"></div>
+                        <div class="star-value" id="value-ease">Not rated</div>
+                    </div>
+
+                    <!-- Factor 3: Time & Effort -->
+                    <div class="rating-section">
+                        <div class="rating-title">⏱️ Time & Effort Required</div>
+                        <div class="rating-meaning">
+                            • 10 stars: Very time-consuming / High maintenance<br>
+                            • 5 stars: Moderate time needed<br>
+                            • 1 star: Minimal time / Low maintenance
+                        </div>
+                        <div class="stars-container" id="stars-time"></div>
+                        <div class="star-value" id="value-time">Not rated</div>
+                    </div>
+
+                    <!-- Factor 4: Quality & Variety -->
+                    <div class="rating-section">
+                        <div class="rating-title">🌱 Food Quality & Variety</div>
+                        <div class="rating-meaning">
+                            • 10 stars: Excellent quality / Wide variety available<br>
+                            • 5 stars: Good quality / Decent variety<br>
+                            • 1 star: Poor quality / Very limited variety
+                        </div>
+                        <div class="stars-container" id="stars-quality"></div>
+                        <div class="star-value" id="value-quality">Not rated</div>
+                    </div>
+
+                    <!-- Factor 5: Space & Aesthetics -->
+                    <div class="rating-section">
+                        <div class="rating-title">📐 Space & Aesthetics</div>
+                        <div class="rating-meaning">
+                            • 10 stars: Compact / Beautiful design<br>
+                            • 5 stars: Moderate size / Decent looks<br>
+                            • 1 star: Takes up too much space / Ugly
+                        </div>
+                        <div class="stars-container" id="stars-space"></div>
+                        <div class="star-value" id="value-space">Not rated</div>
+                    </div>
+
+                    <!-- Factor 6: Automation -->
+                    <div class="rating-section">
+                        <div class="rating-title">🤖 Automation & Reliability</div>
+                        <div class="rating-meaning">
+                            • 10 stars: Fully automated / Very reliable<br>
+                            • 5 stars: Some automation / Moderately reliable<br>
+                            • 1 star: Manual / Unreliable
+                        </div>
+                        <div class="stars-container" id="stars-automation"></div>
+                        <div class="star-value" id="value-automation">Not rated</div>
+                    </div>
+
+                    <div class="navigation">
+                        <button class="next-btn" onclick="loadDemographics()">Next</button>
+                    </div>
+                </div>
+            `;
+
+            // Initialize star ratings
+            initStarRating('price');
+            initStarRating('ease');
+            initStarRating('time');
+            initStarRating('quality');
+            initStarRating('space');
+            initStarRating('automation');
+
+            showSection('competing-factors');
+        }
+
+        function initStarRating(factor) {
+            const container = document.getElementById(`stars-${factor}`);
+            for (let i = 1; i <= 10; i++) {
+                const star = document.createElement('span');
+                star.className = 'star';
+                star.innerHTML = '★';
+                star.onclick = () => setRating(factor, i);
+                container.appendChild(star);
+            }
+        }
+
+        function setRating(factor, rating) {
+            surveyData.ratings[factor] = rating;
+            const stars = document.querySelectorAll(`#stars-${factor} .star`);
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+            document.getElementById(`value-${factor}`).textContent = `Your rating: ${rating}/10`;
+        }
+
+        // Demographics (will implement next)
+        function loadDemographics() {
+            // TODO: Implement demographics
+            submitSurvey();
+        }
+
+        // Submit Survey
+        function submitSurvey() {
+            surveyData.completedAt = new Date().toISOString();
+
+            // TODO: Send to Google Sheets
+            console.log('Survey Data:', surveyData);
+
+            showSection('section-complete');
+        }
+    </script>
+</body>
+</html>
