@@ -481,6 +481,61 @@
         let totalSteps = 30; // Estimated total steps (will be updated when tier is determined)
         let maxProgressReached = 0; // Track maximum progress to prevent backward movement
 
+        // Debug logging system
+        const DEBUG = true; // Set to false to disable all debug logs
+        const debugLog = {
+            navigation: (action, fromSection, toSection) => {
+                if (!DEBUG) return;
+                console.log(`🧭 NAVIGATION: ${action}`, {
+                    from: fromSection?.id || 'none',
+                    to: toSection?.id || 'none',
+                    currentStep,
+                    totalSections: sections.length,
+                    progress: `${maxProgressReached.toFixed(1)}%`
+                });
+            },
+            dataChange: (key, value, type = 'response') => {
+                if (!DEBUG) return;
+                console.log(`📝 DATA CHANGE: ${type}.${key} =`, value, {
+                    customerTier: surveyData.customerTier,
+                    totalResponses: Object.keys(surveyData.responses).length
+                });
+            },
+            tierAssignment: (tier, reason) => {
+                if (!DEBUG) return;
+                console.log(`🎯 TIER ASSIGNED: ${tier}`, {
+                    reason,
+                    ownership: surveyData.ownership,
+                    usage: surveyData.usage,
+                    satisfaction: surveyData.satisfaction,
+                    awareness: surveyData.awareness
+                });
+            },
+            sectionAdded: (sectionIds) => {
+                if (!DEBUG) return;
+                console.log(`➕ SECTIONS ADDED:`, sectionIds, {
+                    totalSections: sections.length,
+                    sectionIds: sections.map(s => s.id)
+                });
+            },
+            reset: (type) => {
+                if (!DEBUG) return;
+                console.log(`🔄 RESET: ${type}`, {
+                    sectionsLength: sections.length,
+                    currentStep,
+                    progress: maxProgressReached
+                });
+            },
+            selection: (type, key, value) => {
+                if (!DEBUG) return;
+                console.log(`✅ USER SELECTION: ${type}`, {
+                    key,
+                    value,
+                    currentSection: sections[currentStep]?.id
+                });
+            }
+        };
+
         const sections = [
             // Welcome
             {
@@ -1489,30 +1544,44 @@
         }
 
         function nextSection() {
+            const fromSection = sections[currentStep];
             currentStep++;
             if (currentStep < sections.length) {
-                renderSection(sections[currentStep]);
+                const toSection = sections[currentStep];
+                debugLog.navigation('NEXT', fromSection, toSection);
+                renderSection(toSection);
             }
         }
 
         function previousSection() {
             if (currentStep > 0) {
+                const fromSection = sections[currentStep];
                 currentStep--;
+                const toSection = sections[currentStep];
 
                 // Check if we're going back to welcome - full reset
-                if (sections[currentStep].id === 'welcome') {
+                if (toSection.id === 'welcome') {
+                    debugLog.reset('FULL - Going back to welcome');
                     resetSurvey();
                 }
                 // Check if we're going back to ownership question - need to clear tier sections
-                else if (sections[currentStep].id === 'ownership') {
+                else if (toSection.id === 'ownership') {
+                    debugLog.reset('TIER SECTIONS - Going back to ownership');
                     clearTierSections();
                 }
 
-                renderSection(sections[currentStep]);
+                debugLog.navigation('BACK', fromSection, toSection);
+                renderSection(toSection);
             }
         }
 
         function resetSurvey() {
+            console.log('🔄 RESET SURVEY - Before:', {
+                tier: surveyData.customerTier,
+                sections: sections.length,
+                responses: Object.keys(surveyData.responses).length
+            });
+
             // Reset all data to initial state
             surveyData.startTime = new Date().toISOString();
             surveyData.age = '';
@@ -1536,11 +1605,23 @@
             currentStep = 0;
             maxProgressReached = 0;
             document.getElementById('progressBar').style.width = '0%';
+
+            console.log('✅ RESET COMPLETE - After:', {
+                sections: sections.length,
+                progress: '0%'
+            });
         }
 
         function clearTierSections() {
+            console.log('🔄 CLEAR TIER SECTIONS - Before:', {
+                tier: surveyData.customerTier,
+                sections: sections.length,
+                sectionIds: sections.map(s => s.id)
+            });
+
             // Remove all sections after ownership (index 8)
             // Base sections: welcome, age, gender, income, family, living, location, psycho, ownership (9 total)
+            const removedSections = sections.slice(9).map(s => s.id);
             sections.length = 9;
 
             // Reset tier-specific data
@@ -1567,17 +1648,27 @@
 
             // Clear ratings (competing factors)
             surveyData.ratings = {};
+
+            console.log('✅ TIER SECTIONS CLEARED - After:', {
+                removedSections,
+                sections: sections.length,
+                sectionIds: sections.map(s => s.id)
+            });
         }
 
         // Selection functions
         function select(key, value) {
+            debugLog.selection('select', key, value);
             surveyData.responses[key] = value;
+            debugLog.dataChange(key, value, 'response');
             nextSection();
         }
 
         // Demographics selection (no auto-advance)
         function selectDemo(key, value) {
+            debugLog.selection('selectDemo', key, value);
             surveyData.responses[key] = value;
+            debugLog.dataChange(key, value, 'response');
             event.target.classList.add('selected');
             // Deselect siblings
             const siblings = event.target.parentElement.querySelectorAll('.option-btn:not(.multi-select)');
@@ -1587,20 +1678,29 @@
         }
 
         function selectOwnership(answer) {
+            debugLog.selection('selectOwnership', 'ownership', answer);
             surveyData.ownership = answer;
-            if (answer === 'yes') {
-                sections.push(tierSections.usage);
-            } else {
-                sections.push(tierSections.awareness);
-            }
+            debugLog.dataChange('ownership', answer, 'branching');
+
+            const sectionToAdd = answer === 'yes' ? 'usage' : 'awareness';
+            sections.push(tierSections[sectionToAdd]);
+            debugLog.sectionAdded([sectionToAdd]);
+
             nextSection();
         }
 
         function selectUsage(frequency) {
+            debugLog.selection('selectUsage', 'usage', frequency);
             surveyData.usage = frequency;
+            debugLog.dataChange('usage', frequency, 'branching');
+
             if (frequency === 'daily' || frequency === 'weekly') {
                 // Satisfied customer - all 6 questions
                 surveyData.customerTier = 'SATISFIED';
+                debugLog.tierAssignment('SATISFIED', 'Active usage (daily/weekly)');
+
+                const satisfiedSections = ['satisfied_system', 'satisfied_duration', 'satisfied_love',
+                                           'satisfied_improve', 'satisfied_recommend', 'satisfied_one_thing'];
                 sections.push(
                     tierSections.satisfied_system,
                     tierSections.satisfied_duration,
@@ -1609,18 +1709,27 @@
                     tierSections.satisfied_recommend,
                     tierSections.satisfied_one_thing
                 );
+                debugLog.sectionAdded(satisfiedSections);
             } else {
                 // Check satisfaction
                 sections.push(tierSections.satisfaction);
+                debugLog.sectionAdded(['satisfaction']);
             }
             nextSection();
         }
 
         function selectSatisfaction(level) {
+            debugLog.selection('selectSatisfaction', 'satisfaction', level);
             surveyData.satisfaction = level;
+            debugLog.dataChange('satisfaction', level, 'branching');
+
             if (level === 'very_satisfied' || level === 'satisfied') {
                 // Satisfied customer - all 6 questions
                 surveyData.customerTier = 'SATISFIED';
+                debugLog.tierAssignment('SATISFIED', 'Satisfied despite minimal use');
+
+                const satisfiedSections = ['satisfied_system', 'satisfied_duration', 'satisfied_love',
+                                           'satisfied_improve', 'satisfied_recommend', 'satisfied_one_thing'];
                 sections.push(
                     tierSections.satisfied_system,
                     tierSections.satisfied_duration,
@@ -1629,9 +1738,15 @@
                     tierSections.satisfied_recommend,
                     tierSections.satisfied_one_thing
                 );
+                debugLog.sectionAdded(satisfiedSections);
             } else {
                 // Tier 1: Fed Up - all 10 questions
                 surveyData.customerTier = 'TIER1';
+                debugLog.tierAssignment('TIER1', 'Dissatisfied with minimal use');
+
+                const tier1Sections = ['tier1_system', 'tier1_duration', 'tier1_why_bought', 'tier1_why_stopped',
+                                       'tier1_frustration', 'tier1_switching', 'tier1_look_for', 'tier1_six_months',
+                                       'tier1_recommend', 'tier1_what_convince'];
                 sections.push(
                     tierSections.tier1_system,
                     tierSections.tier1_duration,
@@ -1644,15 +1759,24 @@
                     tierSections.tier1_recommend,
                     tierSections.tier1_what_convince
                 );
+                debugLog.sectionAdded(tier1Sections);
             }
             nextSection();
         }
 
         function selectAwareness(answer) {
+            debugLog.selection('selectAwareness', 'awareness', answer);
             surveyData.awareness = answer;
+            debugLog.dataChange('awareness', answer, 'branching');
+
             if (answer === 'no') {
                 // Tier 3: Unexplored - 8 questions
                 surveyData.customerTier = 'TIER3';
+                debugLog.tierAssignment('TIER3', 'No awareness of indoor growing systems');
+
+                const tier3Sections = ['tier3_current_needs', 'tier3_describe', 'tier3_produce_spending',
+                                       'tier3_supplement_spending', 'tier3_what_valuable', 'tier3_biggest_concerns',
+                                       'tier3_likelihood', 'tier3_max_price'];
                 sections.push(
                     tierSections.tier3_current_needs,
                     tierSections.tier3_describe,
@@ -1663,9 +1787,14 @@
                     tierSections.tier3_likelihood,
                     tierSections.tier3_max_price
                 );
+                debugLog.sectionAdded(tier3Sections);
             } else {
                 // Tier 2: Refusing - all 6 questions
                 surveyData.customerTier = 'TIER2';
+                debugLog.tierAssignment('TIER2', 'Aware but not using');
+
+                const tier2Sections = ['tier2_why_not', 'tier2_current_solution', 'tier2_satisfaction',
+                                       'tier2_grow_interests', 'tier2_what_convince', 'tier2_likelihood'];
                 sections.push(
                     tierSections.tier2_why_not,
                     tierSections.tier2_current_solution,
@@ -1674,6 +1803,7 @@
                     tierSections.tier2_what_convince,
                     tierSections.tier2_likelihood
                 );
+                debugLog.sectionAdded(tier2Sections);
             }
             nextSection();
         }
@@ -1690,6 +1820,8 @@
                 if (index === -1) {
                     // Selecting this option - clear all and add only this
                     surveyData.multiSelect[category] = [value];
+                    debugLog.selection('toggleMulti (none)', category, [value]);
+                    debugLog.dataChange(category, [value], 'multiSelect');
                     // Deselect all other buttons
                     const allButtons = event.target.parentElement.querySelectorAll('.multi-select');
                     allButtons.forEach(btn => {
@@ -1701,6 +1833,8 @@
                 } else {
                     // Deselecting
                     arr.splice(index, 1);
+                    debugLog.selection('toggleMulti (deselect)', category, arr);
+                    debugLog.dataChange(category, arr, 'multiSelect');
                     event.target.classList.remove('selected');
                 }
             } else {
@@ -1729,6 +1863,8 @@
                     arr.splice(index, 1);
                     event.target.classList.remove('selected');
                 }
+                debugLog.selection('toggleMulti', category, arr);
+                debugLog.dataChange(category, arr, 'multiSelect');
             }
         }
 
@@ -1747,6 +1883,7 @@
             const actualValue = reverse ? (11 - parseInt(value)) : parseInt(value);
             surveyData.ratings[factor] = actualValue;
             document.getElementById(`value-${factor}`).textContent = value;
+            debugLog.dataChange(factor, `${actualValue} (display: ${value}, reversed: ${reverse})`, 'rating');
         }
 
         // Star rating (for tier2_satisfaction only)
