@@ -116,7 +116,7 @@ Indoor Growing Systems Survey for Blue Ocean Strategy analysis. Deployed at: htt
 - `finish()` - Submit to Google Sheets
 
 ### Google Sheets Integration
-- Script URL: https://script.google.com/macros/s/AKfycbx2WUXxwR7LWg3QWjEO1yIv4JT5BD2SvOq-LDL3N6BYsl3xODVPawBP-wlYftSUigNt_Q/exec
+- Script URL: https://script.google.com/macros/s/AKfycbysMQxwOk-4FWG_NTdV3OcDGv-i8JT-HBtQaPYmwqrYmxBdR2o4louMBw8M3CMQYm4j/exec
 - 54 total columns:
   - 8 metadata (timestamp, age, ownership, usage, satisfaction, awareness, tier, currency)
   - 6 Satisfied questions
