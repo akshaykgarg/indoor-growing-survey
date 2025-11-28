@@ -17,7 +17,7 @@
  * - T3 likelihood and price questions split into separate screens
  *
  * DATA STRUCTURE:
- * - 54 total columns broken down as:
+ * - 55 total columns broken down as:
  *   - 8 metadata fields (timestamp, age, ownership, usage, satisfaction, awareness, tier, currency)
  *   - 6 Satisfied customer questions
  *   - 10 Tier 1 (Fed Up) questions
@@ -26,6 +26,7 @@
  *   - 6 Competing Factors ratings (1-10 sliders)
  *   - 6 Demographics fields
  *   - 3 Metadata tracking (start time, completed time, navigation path)
+ *   - 1 URL parameter (source) for response classification
  * - Tier-specific questions only populated for that tier's path
  * - Competing factors only for Tier 1 and Satisfied customers (blank for Tier 2/3)
  * - Demographics collected from all respondents
@@ -168,7 +169,10 @@ function prepareRowData(data) {
     // Metadata
     data.startTime || '',
     data.completedAt || '',
-    arrayToString(data.navigationPath || [])
+    arrayToString(data.navigationPath || []),
+
+    // URL Parameter for Classification
+    data.source || 'direct'
   ];
 
   return row;
@@ -252,7 +256,10 @@ function setupHeaders() {
     // Metadata (3 tracking fields)
     'Start Time',
     'Completed At',
-    'Navigation Path'
+    'Navigation Path',
+
+    // URL Parameter for Classification (1 field)
+    'Source'
   ];
 
   // Clear existing content and set headers

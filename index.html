@@ -461,6 +461,12 @@
         // Google Sheets Web App URL
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbysMQxwOk-4FWG_NTdV3OcDGv-i8JT-HBtQaPYmwqrYmxBdR2o4louMBw8M3CMQYm4j/exec';
 
+        // Capture URL parameter for response classification
+        function getURLParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name) || '';
+        }
+
         const surveyData = {
             startTime: new Date().toISOString(),
             age: '',
@@ -474,7 +480,9 @@
             ratings: {},
             demographics: {},
             currency: 'USD',
-            navigationPath: []
+            navigationPath: [],
+            // URL parameter for classification
+            source: getURLParameter('source') || 'direct'
         };
 
         let currentStep = 0;
