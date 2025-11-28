@@ -486,25 +486,33 @@
         /**
          * Dynamic Progress Bar - calculates progress based on remaining questions
          * Each question takes an equal portion of the REMAINING progress bar
+         * Assumes minimum 20 questions to prevent progress from advancing too quickly
          */
         class ProgressBarModule {
-            constructor(barElementId, debug = false) {
+            constructor(barElementId, debug = false, minQuestions = 20) {
                 this.barElement = document.getElementById(barElementId);
                 this.currentProgress = 0;
                 this.questionsAnswered = 0;
+                this.minQuestions = minQuestions;
                 this.debug = debug;
-                if (this.debug) console.log('🎨 Progress Bar Module initialized');
+                if (this.debug) console.log('🎨 Progress Bar Module initialized (min questions:', minQuestions + ')');
             }
 
-            updateProgress(questionsRemaining) {
-                if (questionsRemaining <= 0) {
+            updateProgress(questionsRemaining, isCompletionScreen = false) {
+                // Only set to 100% if we're on the actual completion screen
+                if (isCompletionScreen) {
                     this.currentProgress = 100;
-                } else {
+                } else if (questionsRemaining > 0) {
+                    // Use the greater of actual remaining questions or minimum assumption
+                    // This prevents progress from advancing too quickly during initial questions
+                    const effectiveRemaining = Math.max(questionsRemaining, this.minQuestions - this.questionsAnswered);
+
                     const remainingProgress = 100 - this.currentProgress;
-                    const progressIncrement = remainingProgress / questionsRemaining;
+                    const progressIncrement = remainingProgress / effectiveRemaining;
                     this.currentProgress += progressIncrement;
                     this.currentProgress = Math.min(this.currentProgress, 100);
                 }
+                // If questionsRemaining = 0 but not completion screen, don't update (sections being added)
 
                 this.questionsAnswered++;
                 this.render();
@@ -513,6 +521,8 @@
                     console.log(`📊 Progress:`, {
                         answered: this.questionsAnswered,
                         remaining: questionsRemaining,
+                        effectiveRemaining: questionsRemaining > 0 ? Math.max(questionsRemaining, this.minQuestions - this.questionsAnswered) : 0,
+                        isCompletion: isCompletionScreen,
                         current: this.currentProgress.toFixed(2) + '%'
                     });
                 }
@@ -536,8 +546,8 @@
             }
         }
 
-        // Initialize progress bar
-        const progressBar = new ProgressBarModule('progressBar', DEBUG);
+        // Initialize progress bar (assume minimum 20 questions)
+        const progressBar = new ProgressBarModule('progressBar', DEBUG, 20);
         // ===== END PROGRESS BAR MODULE =====
         const debugLog = {
             navigation: (action, fromSection, toSection) => {
@@ -1570,9 +1580,10 @@
             document.getElementById('content').innerHTML = section.html;
 
             // Calculate how many questions remain AFTER current question
-            // When on completion screen (last section), questionsRemaining = 0 → progress = 100%
+            // Special case: Only show 100% if we're actually on the completion screen
             const questionsRemaining = sections.length - currentStep - 1;
-            progressBar.updateProgress(questionsRemaining);
+            const isCompletionScreen = section.id === 'completion';
+            progressBar.updateProgress(questionsRemaining, isCompletionScreen);
 
             // Initialize sliders if on competing factors page
             if (section.id === 'competing_factors') {

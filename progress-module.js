@@ -3,29 +3,36 @@
  *
  * Calculates progress based on remaining questions in real-time.
  * Each question consumes an equal portion of the REMAINING progress bar.
+ * Assumes minimum 20 questions to prevent rapid advancement during initial questions.
  *
- * Example with 20 total sections:
- * - Q1 rendered: questionsRemaining = 19, progress = 1/20 of 100% = 5%
- * - Q2 rendered: questionsRemaining = 18, progress = 5% + (1/19 of 95%) = ~10%
- * - Q3 rendered: questionsRemaining = 17, progress = ~10% + (1/18 of 90%) = ~15%
+ * Algorithm:
+ * - effectiveRemaining = max(actualRemaining, minQuestions - questionsAnswered)
+ * - progressIncrement = remainingProgress / effectiveRemaining
+ *
+ * Example with 20 minimum questions:
+ * - Q1: effectiveRemaining = max(19, 20-1) = 19, progress = 1/20 of 100% = 5%
+ * - Q2: effectiveRemaining = max(18, 20-2) = 18, progress = 5% + (1/19 of 95%) = ~10%
  * - ... and so on ...
  * - Completion: questionsRemaining = 0, progress = 100%
  *
  * This ensures smooth progression that never goes backward and
  * automatically adjusts to different tier path lengths.
  *
- * Usage: Call updateProgress(sections.length - currentStep - 1) on each render
+ * Usage:
+ * - Initialize: new ProgressBar('progressBar', debug=false, minQuestions=20)
+ * - Update: progressBar.updateProgress(sections.length - currentStep - 1)
  */
 
 class ProgressBar {
-    constructor(barElementId, debug = false) {
+    constructor(barElementId, debug = false, minQuestions = 20) {
         this.barElement = document.getElementById(barElementId);
         this.currentProgress = 0; // 0 to 100
         this.questionsAnswered = 0;
+        this.minQuestions = minQuestions;
         this.debug = debug;
 
         if (this.debug) {
-            console.log('🎨 Progress Bar Module initialized');
+            console.log('🎨 Progress Bar Module initialized (min questions:', minQuestions + ')');
         }
     }
 
@@ -39,9 +46,13 @@ class ProgressBar {
             // Survey complete
             this.currentProgress = 100;
         } else {
+            // Use the greater of actual remaining questions or minimum assumption
+            // This prevents progress from advancing too quickly during initial questions
+            const effectiveRemaining = Math.max(questionsRemaining, this.minQuestions - this.questionsAnswered);
+
             // Calculate how much of the remaining bar this question should consume
             const remainingProgress = 100 - this.currentProgress;
-            const progressIncrement = remainingProgress / questionsRemaining;
+            const progressIncrement = remainingProgress / effectiveRemaining;
 
             this.currentProgress += progressIncrement;
 
@@ -58,7 +69,7 @@ class ProgressBar {
             console.log(`📊 Progress Update:`, {
                 questionsAnswered: this.questionsAnswered,
                 questionsRemaining,
-                progressIncrement: questionsRemaining > 0 ? ((100 - this.currentProgress + (100 - this.currentProgress) / questionsRemaining) / questionsRemaining).toFixed(2) + '%' : 'N/A',
+                effectiveRemaining: questionsRemaining > 0 ? Math.max(questionsRemaining, this.minQuestions - this.questionsAnswered + 1) : 0,
                 currentProgress: this.currentProgress.toFixed(2) + '%'
             });
         }
