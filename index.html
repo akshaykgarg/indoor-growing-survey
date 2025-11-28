@@ -1995,11 +1995,19 @@
         }
 
         // ═══════════════════════════════════════════════════════════════
-        // BACKUP SYSTEM: 2-LAYER REDUNDANCY (NO LOCAL STORAGE)
+        // BACKUP SYSTEM: 3-LAYER REDUNDANCY (NO LOCAL STORAGE)
         // ═══════════════════════════════════════════════════════════════
-        // Layer 1: GitHub Gist (accessible backup - ALWAYS SENT)
-        // Layer 2: Google Sheets (primary storage)
+        // Layer 1: Supabase Database (accessible backup - ALWAYS SENT)
+        // Layer 2: GitHub Gist (accessible backup - ALWAYS SENT)
+        // Layer 3: Google Sheets (primary storage)
         // ═══════════════════════════════════════════════════════════════
+
+        // Supabase configuration
+        const SUPABASE_CONFIG = {
+            url: 'YOUR_SUPABASE_URL',           // https://xxxxx.supabase.co
+            anonKey: 'YOUR_SUPABASE_ANON_KEY',  // Public anon key
+            tableName: 'survey_responses'
+        };
 
         // GitHub Gist configuration
         const GITHUB_CONFIG = {
@@ -2007,6 +2015,43 @@
             gistId: 'YOUR_GIST_ID',     // ID of the secret gist to append to
             filename: 'survey-responses.json'
         };
+
+        // Send backup to Supabase (ALWAYS for every response)
+        async function sendSupabaseBackup(surveyData) {
+            if (SUPABASE_CONFIG.url === 'YOUR_SUPABASE_URL' || SUPABASE_CONFIG.anonKey === 'YOUR_SUPABASE_ANON_KEY') {
+                console.log('⚠️ Supabase backup not configured');
+                return false;
+            }
+
+            try {
+                const response = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/${SUPABASE_CONFIG.tableName}`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_CONFIG.anonKey,
+                        'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({
+                        timestamp: new Date().toISOString(),
+                        customer_tier: surveyData.customerTier,
+                        source: surveyData.source,
+                        data: surveyData
+                    })
+                });
+
+                if (response.ok) {
+                    console.log('✅ Supabase backup sent successfully');
+                    return true;
+                } else {
+                    console.error('❌ Supabase backup failed:', response.status);
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ Error sending Supabase backup:', error);
+                return false;
+            }
+        }
 
         // Send backup to GitHub Gist (ALWAYS for every response)
         async function sendGistBackup(surveyData) {
@@ -2083,9 +2128,17 @@
             }
         }
 
-        // Google Sheets Submission with GitHub Gist Backup
+        // Google Sheets Submission with Supabase + GitHub Gist Backup
         async function submitSurvey() {
-            // LAYER 1: Send to GitHub Gist ALWAYS (accessible backup)
+            // LAYER 1: Send to Supabase ALWAYS (accessible backup)
+            const supabaseSent = await sendSupabaseBackup(surveyData);
+            if (supabaseSent) {
+                console.log('✅ Supabase backup sent successfully');
+            } else {
+                console.warn('⚠️ Supabase backup not configured or failed');
+            }
+
+            // LAYER 2: Send to GitHub Gist ALWAYS (accessible backup)
             const gistSent = await sendGistBackup(surveyData);
             if (gistSent) {
                 console.log('✅ Gist backup sent successfully');
@@ -2093,7 +2146,7 @@
                 console.warn('⚠️ Gist backup not configured or failed');
             }
 
-            // LAYER 2: Try Google Sheets (primary)
+            // LAYER 3: Try Google Sheets (primary)
             try {
                 console.log('Submitting survey data:', surveyData);
 
@@ -2111,7 +2164,7 @@
             } catch (error) {
                 console.error('❌ Error submitting to Google Sheets:', error);
 
-                if (gistSent) {
+                if (supabaseSent || gistSent) {
                     alert('Survey completed! Your response has been saved to backup (Google Sheets temporarily unavailable).');
                 } else {
                     alert('Survey completed! However, there was an issue saving your response. Please contact support.');
