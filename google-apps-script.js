@@ -98,9 +98,19 @@ function prepareRowData(data) {
   };
 
   const row = [
-    // Timestamp & Basic Info
+    // Timestamp
     new Date(),
+
+    // Demographics (Asked First - 6 fields)
     getResponse('age') || data.age || '',
+    getResponse('gender'),
+    getResponse('income'),
+    getResponse('family'),
+    getResponse('living'),
+    getResponse('location'),
+    getMultiSelect('demo_psycho'),
+
+    // Branching Info
     data.ownership || '',
     data.usage || '',
     data.satisfaction || '',
@@ -136,7 +146,7 @@ function prepareRowData(data) {
     getMultiSelect('convince'),
     getResponse('tier2_likelihood'),
 
-    // TIER 3: Unexplored Questions (8)
+    // TIER 3: Unexplored Questions (9 - includes blank)
     '', // Interest question removed
     getMultiSelect('needs'),
     getMultiSelect('describe'),
@@ -147,21 +157,13 @@ function prepareRowData(data) {
     getResponse('tier3_likelihood'),
     getResponse('max_price'),
 
-    // Competing Factors Ratings (Top 6) - Empty for Tier 3
+    // Competing Factors Ratings (6 sliders - only for Tier 1 & Satisfied)
     getRating('price'),
     getRating('ease'),
     getRating('quality'),
     getRating('time'),
     getRating('space'),
     getRating('automation'),
-
-    // Demographics (6 fields)
-    getResponse('gender'),
-    getResponse('income'),
-    getResponse('family'),
-    getResponse('living'),
-    getResponse('location'),
-    getMultiSelect('demo_psycho'),
 
     // Metadata
     data.startTime || '',
@@ -180,9 +182,19 @@ function setupHeaders() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
   const headers = [
-    // Timestamp & Basic Info
+    // Timestamp
     'Timestamp',
-    'Age Range',
+
+    // Demographics (Asked First in Survey - 6 fields)
+    'Demo: Age Range',
+    'Demo: Gender',
+    'Demo: Household Income (per month)',
+    'Demo: Family Structure',
+    'Demo: Living Situation',
+    'Demo: Location Type',
+    'Demo: Psychographics',
+
+    // Branching/Tier Info (6 fields)
     'Ownership',
     'Usage Frequency',
     'Satisfaction Level',
@@ -218,34 +230,26 @@ function setupHeaders() {
     'T2: What Would Convince',
     'T2: Likelihood to Try',
 
-    // TIER 3: Unexplored (8 questions - Interest removed, column kept for compatibility)
+    // TIER 3: Unexplored (9 columns - includes blank for removed question)
     'T3: Interest Level (removed)',
     'T3: Current Food Sources',
     'T3: Describes Them',
-    'T3: Produce Spending',
+    'T3: Produce Spending (monthly)',
     'T3: Supplement Usage',
     'T3: What Would Be Valuable',
     'T3: Biggest Concerns',
     'T3: Likelihood to Try',
     'T3: Max Price Willing',
 
-    // Competing Factors (Top 6) - Star Ratings
+    // Competing Factors (6 sliders - only for Tier 1 & Satisfied)
     'CF: Price Rating (1-10)',
-    'CF: Ease of Use Rating (1-10)',
+    'CF: Ease of Use Rating (1-10, reversed)',
     'CF: Quality Rating (1-10)',
-    'CF: Time & Effort Rating (1-10)',
-    'CF: Space Rating (1-10)',
+    'CF: Time & Effort Rating (1-10, reversed)',
+    'CF: Space Rating (1-10, reversed)',
     'CF: Automation Rating (1-10)',
 
-    // Demographics (6 fields)
-    'Demo: Gender',
-    'Demo: Household Income',
-    'Demo: Family Structure',
-    'Demo: Living Situation',
-    'Demo: Location Type',
-    'Demo: Psychographics',
-
-    // Metadata
+    // Metadata (3 tracking fields)
     'Start Time',
     'Completed At',
     'Navigation Path'
