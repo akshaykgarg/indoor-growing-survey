@@ -503,13 +503,11 @@
                 if (isCompletionScreen) {
                     this.currentProgress = 100;
                 } else if (questionsRemaining > 0) {
-                    // Use the greater of actual remaining questions or minimum assumption
-                    // This prevents progress from advancing too quickly during initial questions
-                    const effectiveRemaining = Math.max(questionsRemaining, this.minQuestions - this.questionsAnswered);
+                    // Calculate total expected questions (use minimum assumption initially)
+                    const totalExpected = Math.max(this.minQuestions, this.questionsAnswered + questionsRemaining);
 
-                    const remainingProgress = 100 - this.currentProgress;
-                    const progressIncrement = remainingProgress / effectiveRemaining;
-                    this.currentProgress += progressIncrement;
+                    // Progress = questions answered / total expected * 100
+                    this.currentProgress = (this.questionsAnswered / totalExpected) * 100;
                     this.currentProgress = Math.min(this.currentProgress, 100);
                 }
                 // If questionsRemaining = 0 but not completion screen, don't update (sections being added)
@@ -518,10 +516,11 @@
                 this.render();
 
                 if (this.debug) {
+                    const totalExpected = questionsRemaining > 0 ? Math.max(this.minQuestions, this.questionsAnswered + questionsRemaining) : 0;
                     console.log(`📊 Progress:`, {
                         answered: this.questionsAnswered,
                         remaining: questionsRemaining,
-                        effectiveRemaining: questionsRemaining > 0 ? Math.max(questionsRemaining, this.minQuestions - this.questionsAnswered) : 0,
+                        totalExpected: totalExpected,
                         isCompletion: isCompletionScreen,
                         current: this.currentProgress.toFixed(2) + '%'
                     });
