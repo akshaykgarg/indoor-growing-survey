@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Backup Recovery</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2d5f3f;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            padding: 20px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .stat-card.success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+        .stat-card.warning {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background: #2d5f3f;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #1e4029;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 95, 63, 0.3);
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        .backups-list {
+            margin-top: 20px;
+        }
+        .backup-item {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #2d5f3f;
+        }
+        .backup-item.unsubmitted {
+            border-left-color: #ff6a00;
+            background: #fff3e0;
+        }
+        .backup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .backup-time {
+            font-weight: bold;
+            color: #2d5f3f;
+        }
+        .backup-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-submitted {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .backup-details {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .backup-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .backup-actions button {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        .no-backups {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        .no-backups-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Survey Backup Recovery</h1>
+        <p class="subtitle">View and manage survey response backups stored in browser</p>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalBackups">0</div>
+                <div class="stat-label">Total Backups</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-number" id="submittedBackups">0</div>
+                <div class="stat-label">Successfully Submitted</div>
+            </div>
+            <div class="stat-card warning">
+                <div class="stat-number" id="unsubmittedBackups">0</div>
+                <div class="stat-label">Failed Submissions</div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn-primary" onclick="refreshBackups()">🔄 Refresh</button>
+            <button class="btn-primary" onclick="downloadAllBackups()">⬇️ Download All</button>
+            <button class="btn-primary" onclick="downloadUnsubmitted()">⚠️ Download Unsubmitted</button>
+            <button class="btn-secondary" onclick="retryUnsubmitted()">🔁 Retry Failed Submissions</button>
+            <button class="btn-danger" onclick="clearSubmitted()">🗑️ Clear Submitted</button>
+            <button class="btn-danger" onclick="clearAll()">❌ Clear All Backups</button>
+        </div>
+
+        <div class="backups-list" id="backupsList"></div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbysMQxwOk-4FWG_NTdV3OcDGv-i8JT-HBtQaPYmwqrYmxBdR2o4louMBw8M3CMQYm4j/exec';
+
+        function getAllBackups() {
+            const backups = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('survey_backup_')) {
+                    try {
+                        const backup = JSON.parse(localStorage.getItem(key));
+                        backups.push({ key, ...backup });
+                    } catch (error) {
+                        console.error('Error reading backup:', key);
+                    }
+                }
+            }
+            return backups.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        }
+
+        function refreshBackups() {
+            const backups = getAllBackups();
+            const unsubmitted = backups.filter(b => !b.submitted);
+            const submitted = backups.filter(b => b.submitted);
+
+            // Update stats
+            document.getElementById('totalBackups').textContent = backups.length;
+            document.getElementById('submittedBackups').textContent = submitted.length;
+            document.getElementById('unsubmittedBackups').textContent = unsubmitted.length;
+
+            // Display backups
+            const listContainer = document.getElementById('backupsList');
+
+            if (backups.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="no-backups">
+                        <div class="no-backups-icon">📭</div>
+                        <h3>No backups found</h3>
+                        <p>Backups are automatically created when someone completes the survey.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listContainer.innerHTML = backups.map(backup => {
+                const date = new Date(backup.timestamp);
+                const isUnsubmitted = !backup.submitted;
+
+                return `
+                    <div class="backup-item ${isUnsubmitted ? 'unsubmitted' : ''}">
+                        <div class="backup-header">
+                            <div class="backup-time">
+                                ${date.toLocaleString()}
+                            </div>
+                            <div class="backup-status ${backup.submitted ? 'status-submitted' : 'status-pending'}">
+                                ${backup.submitted ? '✅ Submitted' : '⚠️ Not Submitted'}
+                            </div>
+                        </div>
+                        <div class="backup-details">
+                            <strong>Tier:</strong> ${backup.data.customerTier || 'N/A'} |
+                            <strong>Source:</strong> ${backup.data.source || 'direct'} |
+                            <strong>Age:</strong> ${backup.data.age || backup.data.responses?.age || 'N/A'}
+                        </div>
+                        <div class="backup-actions">
+                            <button class="btn-secondary" onclick='viewBackup(\`${backup.key}\`)'>👁️ View</button>
+                            <button class="btn-primary" onclick='downloadSingle(\`${backup.key}\`)'>⬇️ Download</button>
+                            ${isUnsubmitted ? `<button class="btn-primary" onclick='retrySubmit(\`${backup.key}\`)'>🔁 Retry Submit</button>` : ''}
+                            <button class="btn-danger" onclick='deleteBackup(\`${backup.key}\`)'>🗑️ Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function viewBackup(key) {
+            const backup = JSON.parse(localStorage.getItem(key));
+            const win = window.open('', '_blank');
+            win.document.write(`
+                <html>
+                <head><title>Backup: ${key}</title></head>
+                <body style="font-family: monospace; padding: 20px;">
+                <h2>Backup Details</h2>
+                <pre>${JSON.stringify(backup, null, 2)}</pre>
+                </body>
+                </html>
+            `);
+        }
+
+        function downloadSingle(key) {
+            const backup = JSON.parse(localStorage.getItem(key));
+            const dataStr = JSON.stringify(backup, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${key}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadAllBackups() {
+            const backups = getAllBackups();
+            if (backups.length === 0) {
+                alert('No backups to download');
+                return;
+            }
+            const dataStr = JSON.stringify(backups, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `all_survey_backups_${Date.now()}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+            alert(`Downloaded ${backups.length} backups`);
+        }
+
+        function downloadUnsubmitted() {
+            const backups = getAllBackups().filter(b => !b.submitted);
+            if (backups.length === 0) {
+                alert('No unsubmitted backups to download');
+                return;
+            }
+            const dataStr = JSON.stringify(backups, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `unsubmitted_backups_${Date.now()}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+            alert(`Downloaded ${backups.length} unsubmitted backups`);
+        }
+
+        async function retrySubmit(key) {
+            const backup = JSON.parse(localStorage.getItem(key));
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(backup.data)
+                });
+                backup.submitted = true;
+                localStorage.setItem(key, JSON.stringify(backup));
+                alert('✅ Successfully submitted!');
+                refreshBackups();
+            } catch (error) {
+                alert('❌ Failed to submit: ' + error.message);
+            }
+        }
+
+        async function retryUnsubmitted() {
+            const unsubmitted = getAllBackups().filter(b => !b.submitted);
+            if (unsubmitted.length === 0) {
+                alert('No unsubmitted backups to retry');
+                return;
+            }
+
+            if (!confirm(`Retry ${unsubmitted.length} failed submissions?`)) return;
+
+            let success = 0;
+            let failed = 0;
+
+            for (const backup of unsubmitted) {
+                try {
+                    await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(backup.data)
+                    });
+                    backup.submitted = true;
+                    localStorage.setItem(backup.key, JSON.stringify(backup));
+                    success++;
+                } catch (error) {
+                    failed++;
+                }
+            }
+
+            alert(`✅ Succeeded: ${success}\n❌ Failed: ${failed}`);
+            refreshBackups();
+        }
+
+        function deleteBackup(key) {
+            if (confirm('Delete this backup?')) {
+                localStorage.removeItem(key);
+                refreshBackups();
+            }
+        }
+
+        function clearSubmitted() {
+            const submitted = getAllBackups().filter(b => b.submitted);
+            if (submitted.length === 0) {
+                alert('No submitted backups to clear');
+                return;
+            }
+            if (confirm(`Delete ${submitted.length} submitted backups?`)) {
+                submitted.forEach(b => localStorage.removeItem(b.key));
+                refreshBackups();
+            }
+        }
+
+        function clearAll() {
+            const backups = getAllBackups();
+            if (backups.length === 0) {
+                alert('No backups to clear');
+                return;
+            }
+            if (confirm(`⚠️ DELETE ALL ${backups.length} BACKUPS?\n\nThis cannot be undone!`)) {
+                backups.forEach(b => localStorage.removeItem(b.key));
+                refreshBackups();
+            }
+        }
+
+        // Load on page load
+        refreshBackups();
+    </script>
+</body>
+</html>

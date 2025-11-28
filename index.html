@@ -1994,8 +1994,99 @@
             document.getElementById(`income-${currency}`).classList.add('active');
         }
 
-        // Google Sheets Submission
+        // Backup System - Save to localStorage
+        function saveBackup() {
+            try {
+                const backupKey = `survey_backup_${Date.now()}`;
+                const backupData = {
+                    timestamp: new Date().toISOString(),
+                    data: surveyData,
+                    submitted: false
+                };
+                localStorage.setItem(backupKey, JSON.stringify(backupData));
+                console.log('✅ Backup saved to localStorage:', backupKey);
+                return backupKey;
+            } catch (error) {
+                console.error('Failed to save backup:', error);
+                return null;
+            }
+        }
+
+        // Mark backup as successfully submitted
+        function markBackupSubmitted(backupKey) {
+            try {
+                const backup = JSON.parse(localStorage.getItem(backupKey));
+                if (backup) {
+                    backup.submitted = true;
+                    localStorage.setItem(backupKey, JSON.stringify(backup));
+                }
+            } catch (error) {
+                console.error('Failed to mark backup as submitted:', error);
+            }
+        }
+
+        // Get all unsubmitted backups
+        function getUnsubmittedBackups() {
+            const unsubmitted = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('survey_backup_')) {
+                    try {
+                        const backup = JSON.parse(localStorage.getItem(key));
+                        if (!backup.submitted) {
+                            unsubmitted.push({ key, ...backup });
+                        }
+                    } catch (error) {
+                        console.error('Error reading backup:', key);
+                    }
+                }
+            }
+            return unsubmitted;
+        }
+
+        // Send backup via email using Web3Forms (free service)
+        async function sendEmailBackup(surveyData) {
+            const WEB3FORMS_ACCESS_KEY = 'YOUR_WEB3FORMS_KEY'; // Get free key from https://web3forms.com
+
+            if (WEB3FORMS_ACCESS_KEY === 'YOUR_WEB3FORMS_KEY') {
+                console.log('⚠️ Email backup not configured');
+                return false;
+            }
+
+            try {
+                const emailData = {
+                    access_key: WEB3FORMS_ACCESS_KEY,
+                    subject: `Survey Response Backup - ${surveyData.customerTier} - ${new Date().toLocaleString()}`,
+                    from_name: 'Indoor Growing Survey',
+                    message: JSON.stringify(surveyData, null, 2)
+                };
+
+                const response = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(emailData)
+                });
+
+                if (response.ok) {
+                    console.log('✅ Email backup sent successfully');
+                    return true;
+                } else {
+                    console.error('❌ Email backup failed');
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ Error sending email backup:', error);
+                return false;
+            }
+        }
+
+        // Google Sheets Submission with Multiple Backup Layers
         async function submitSurvey() {
+            // LAYER 1: Save to localStorage BEFORE attempting submission
+            const backupKey = saveBackup();
+
             try {
                 console.log('Submitting survey data:', surveyData);
 
@@ -2008,13 +2099,50 @@
                     body: JSON.stringify(surveyData)
                 });
 
-                console.log('Survey submitted successfully');
+                console.log('✅ Survey submitted successfully to Google Sheets');
+
+                // Mark backup as submitted
+                if (backupKey) {
+                    markBackupSubmitted(backupKey);
+                }
+
                 return true;
             } catch (error) {
-                console.error('Error submitting survey:', error);
-                // Still show completion even if submission fails
+                console.error('❌ Error submitting to Google Sheets:', error);
+                console.log('⚠️ Response saved in local backup:', backupKey);
+
+                // LAYER 2: Try email backup
+                const emailSent = await sendEmailBackup(surveyData);
+
+                if (emailSent) {
+                    alert('Survey completed! Your response has been sent via email backup.');
+                } else {
+                    alert('Survey completed! Your response has been saved locally. Please contact support with your response ID: ' + backupKey);
+                }
+
                 return false;
             }
+        }
+
+        // Download backup as JSON file (for manual recovery)
+        function downloadBackup() {
+            const backups = getUnsubmittedBackups();
+            if (backups.length === 0) {
+                console.log('No unsubmitted backups found');
+                return;
+            }
+
+            const dataStr = JSON.stringify(backups, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `survey_backups_${Date.now()}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            console.log('✅ Downloaded', backups.length, 'unsubmitted backups');
         }
 
         function finish() {
