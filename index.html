@@ -1994,99 +1994,106 @@
             document.getElementById(`income-${currency}`).classList.add('active');
         }
 
-        // Backup System - Save to localStorage
-        function saveBackup() {
-            try {
-                const backupKey = `survey_backup_${Date.now()}`;
-                const backupData = {
-                    timestamp: new Date().toISOString(),
-                    data: surveyData,
-                    submitted: false
-                };
-                localStorage.setItem(backupKey, JSON.stringify(backupData));
-                console.log('✅ Backup saved to localStorage:', backupKey);
-                return backupKey;
-            } catch (error) {
-                console.error('Failed to save backup:', error);
-                return null;
-            }
-        }
+        // ═══════════════════════════════════════════════════════════════
+        // BACKUP SYSTEM: 2-LAYER REDUNDANCY (NO LOCAL STORAGE)
+        // ═══════════════════════════════════════════════════════════════
+        // Layer 1: GitHub Gist (accessible backup - ALWAYS SENT)
+        // Layer 2: Google Sheets (primary storage)
+        // ═══════════════════════════════════════════════════════════════
 
-        // Mark backup as successfully submitted
-        function markBackupSubmitted(backupKey) {
-            try {
-                const backup = JSON.parse(localStorage.getItem(backupKey));
-                if (backup) {
-                    backup.submitted = true;
-                    localStorage.setItem(backupKey, JSON.stringify(backup));
-                }
-            } catch (error) {
-                console.error('Failed to mark backup as submitted:', error);
-            }
-        }
+        // GitHub Gist configuration
+        const GITHUB_CONFIG = {
+            token: 'YOUR_GITHUB_TOKEN', // Personal Access Token with 'gist' scope
+            gistId: 'YOUR_GIST_ID',     // ID of the secret gist to append to
+            filename: 'survey-responses.json'
+        };
 
-        // Get all unsubmitted backups
-        function getUnsubmittedBackups() {
-            const unsubmitted = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key.startsWith('survey_backup_')) {
-                    try {
-                        const backup = JSON.parse(localStorage.getItem(key));
-                        if (!backup.submitted) {
-                            unsubmitted.push({ key, ...backup });
-                        }
-                    } catch (error) {
-                        console.error('Error reading backup:', key);
-                    }
-                }
-            }
-            return unsubmitted;
-        }
-
-        // Send backup via email using Web3Forms (free service)
-        async function sendEmailBackup(surveyData) {
-            const WEB3FORMS_ACCESS_KEY = 'YOUR_WEB3FORMS_KEY'; // Get free key from https://web3forms.com
-
-            if (WEB3FORMS_ACCESS_KEY === 'YOUR_WEB3FORMS_KEY') {
-                console.log('⚠️ Email backup not configured');
+        // Send backup to GitHub Gist (ALWAYS for every response)
+        async function sendGistBackup(surveyData) {
+            if (GITHUB_CONFIG.token === 'YOUR_GITHUB_TOKEN' || GITHUB_CONFIG.gistId === 'YOUR_GIST_ID') {
+                console.log('⚠️ GitHub Gist backup not configured');
                 return false;
             }
 
             try {
-                const emailData = {
-                    access_key: WEB3FORMS_ACCESS_KEY,
-                    subject: `Survey Response Backup - ${surveyData.customerTier} - ${new Date().toLocaleString()}`,
-                    from_name: 'Indoor Growing Survey',
-                    message: JSON.stringify(surveyData, null, 2)
-                };
-
-                const response = await fetch('https://api.web3forms.com/submit', {
-                    method: 'POST',
+                // First, get the current gist content
+                const getResponse = await fetch(`https://api.github.com/gists/${GITHUB_CONFIG.gistId}`, {
                     headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(emailData)
+                        'Authorization': `token ${GITHUB_CONFIG.token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
                 });
 
-                if (response.ok) {
-                    console.log('✅ Email backup sent successfully');
+                if (!getResponse.ok) {
+                    console.error('❌ Failed to fetch gist');
+                    return false;
+                }
+
+                const gist = await getResponse.json();
+                let currentContent = '';
+
+                if (gist.files[GITHUB_CONFIG.filename]) {
+                    currentContent = gist.files[GITHUB_CONFIG.filename].content;
+                }
+
+                // Parse existing content or start with empty array
+                let responses = [];
+                if (currentContent.trim()) {
+                    try {
+                        responses = JSON.parse(currentContent);
+                    } catch (e) {
+                        console.warn('Could not parse existing content, starting fresh');
+                        responses = [];
+                    }
+                }
+
+                // Add new response with timestamp
+                responses.push({
+                    timestamp: new Date().toISOString(),
+                    data: surveyData
+                });
+
+                // Update the gist
+                const updateResponse = await fetch(`https://api.github.com/gists/${GITHUB_CONFIG.gistId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `token ${GITHUB_CONFIG.token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        files: {
+                            [GITHUB_CONFIG.filename]: {
+                                content: JSON.stringify(responses, null, 2)
+                            }
+                        }
+                    })
+                });
+
+                if (updateResponse.ok) {
+                    console.log('✅ Gist backup sent successfully');
                     return true;
                 } else {
-                    console.error('❌ Email backup failed');
+                    console.error('❌ Gist backup failed');
                     return false;
                 }
             } catch (error) {
-                console.error('❌ Error sending email backup:', error);
+                console.error('❌ Error sending gist backup:', error);
                 return false;
             }
         }
 
-        // Google Sheets Submission with Multiple Backup Layers
+        // Google Sheets Submission with GitHub Gist Backup
         async function submitSurvey() {
-            // LAYER 1: Save to localStorage BEFORE attempting submission
-            const backupKey = saveBackup();
+            // LAYER 1: Send to GitHub Gist ALWAYS (accessible backup)
+            const gistSent = await sendGistBackup(surveyData);
+            if (gistSent) {
+                console.log('✅ Gist backup sent successfully');
+            } else {
+                console.warn('⚠️ Gist backup not configured or failed');
+            }
 
+            // LAYER 2: Try Google Sheets (primary)
             try {
                 console.log('Submitting survey data:', surveyData);
 
@@ -2100,50 +2107,20 @@
                 });
 
                 console.log('✅ Survey submitted successfully to Google Sheets');
-
-                // Mark backup as submitted
-                if (backupKey) {
-                    markBackupSubmitted(backupKey);
-                }
-
                 return true;
             } catch (error) {
                 console.error('❌ Error submitting to Google Sheets:', error);
-                console.log('⚠️ Response saved in local backup:', backupKey);
 
-                // LAYER 2: Try email backup
-                const emailSent = await sendEmailBackup(surveyData);
-
-                if (emailSent) {
-                    alert('Survey completed! Your response has been sent via email backup.');
+                if (gistSent) {
+                    alert('Survey completed! Your response has been saved to backup (Google Sheets temporarily unavailable).');
                 } else {
-                    alert('Survey completed! Your response has been saved locally. Please contact support with your response ID: ' + backupKey);
+                    alert('Survey completed! However, there was an issue saving your response. Please contact support.');
                 }
 
                 return false;
             }
         }
 
-        // Download backup as JSON file (for manual recovery)
-        function downloadBackup() {
-            const backups = getUnsubmittedBackups();
-            if (backups.length === 0) {
-                console.log('No unsubmitted backups found');
-                return;
-            }
-
-            const dataStr = JSON.stringify(backups, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `survey_backups_${Date.now()}.json`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-            console.log('✅ Downloaded', backups.length, 'unsubmitted backups');
-        }
 
         function finish() {
             // Tier 3 skip logic: Skip competing factors (they have no product knowledge)
