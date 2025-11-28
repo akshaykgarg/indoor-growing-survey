@@ -547,7 +547,7 @@
                     to: toSection?.id || 'none',
                     currentStep,
                     totalSections: sections.length,
-                    progress: `${maxProgressReached.toFixed(1)}%`
+                    progress: `${progressBar.getProgress().toFixed(1)}%`
                 });
             },
             dataChange: (key, value, type = 'response') => {
@@ -579,7 +579,7 @@
                 console.log(`🔄 RESET: ${type}`, {
                     sectionsLength: sections.length,
                     currentStep,
-                    progress: maxProgressReached
+                    progress: `${progressBar.getProgress().toFixed(1)}%`
                 });
             },
             selection: (type, key, value) => {
