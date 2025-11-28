@@ -37,13 +37,18 @@ Indoor Growing Systems Survey for Blue Ocean Strategy analysis. Deployed at: htt
 - All single-select questions (using `select()`) now have back buttons
 - Multi-select questions have both Back and Next buttons
 
-### 3. Progress Bar Fix
-- Fixed to only move forward, never backward
-- Set fixed `totalSteps = 30` throughout entire survey (never changes)
-- Added `maxProgressReached` tracking to prevent bar regression
-- Progress increases smoothly ~3.33% per question
-- Removed dynamic totalSteps updates that caused jumps
-- Tested: 30% → 33% → 36% → 40% (no backward movement)
+### 3. Dynamic Progress Bar Module
+- **New Implementation**: Separate ProgressBarModule class for progress calculation
+- **Algorithm**: Each question takes equal portion of REMAINING bar space
+  - Formula: `progressIncrement = (100 - currentProgress) / questionsRemaining`
+  - Example: Q1 takes 1/20 of 100% = 5%, Q2 takes 1/19 of 95% = ~5%, etc.
+- **Key Features**:
+  - Progress only moves forward, never backward
+  - Automatically adjusts to different tier path lengths
+  - Reaches exactly 100% on completion screen
+  - Smooth, proportional progression throughout survey
+- **Implementation**: `renderSection()` calls `progressBar.updateProgress(sections.length - currentStep - 1)`
+- **Files**: Inline in index.html (lines 485-541) + standalone progress-module.js
 
 ### 4. Income Values
 - Changed from annual to monthly (per month)
@@ -155,9 +160,11 @@ Every question is on its own screen except:
 - Competing Factors: 6 sliders on one screen (acceptable as single category)
 
 ### Progress Bar
-- Fixed at 30 total steps for smooth progression
-- Never decreases (maxProgressReached tracking)
-- ~3.33% increase per question
+- Dynamic calculation based on remaining questions
+- Each question takes equal portion of remaining bar space
+- Automatically adjusts to different tier path lengths (Tier 1 longer than Tier 3)
+- Reaches exactly 100% on completion screen
+- Never decreases - only moves forward
 
 ### Back Buttons
 - Present on ALL questions
