@@ -5,7 +5,20 @@ Indoor Growing Systems Survey for Blue Ocean Strategy analysis. Deployed at: htt
 
 ## Latest Session Changes (2025-11-27)
 
-### 0. Survey Data Reset & Cache Fix
+### 0. Debug Logging System
+- **Implemented**: Comprehensive debug logging for all survey operations
+- **Toggle**: Set `DEBUG = false` to disable (currently `true` for development)
+- **Logs tracked**:
+  - 🧭 Navigation (next/back with from/to sections)
+  - 📝 Data changes (responses, multiSelect, ratings)
+  - 🎯 Tier assignments (with reason)
+  - ➕ Section additions (when tier paths are determined)
+  - 🔄 Reset operations (full reset & tier clearing)
+  - ✅ User selections (all button clicks)
+- **Test file**: `test-debug-logging.js` verifies all logging works correctly
+- **Usage**: Open browser console to see real-time logs during survey
+
+### 1. Survey Data Reset & Cache Fix
 - **Fixed**: Survey data and tier sections now properly clear when navigating back
 - **When going back to ownership question**: Clears all tier-specific sections and data
 - **When going back to welcome screen**: Full survey reset (all data, progress, sections)
@@ -110,7 +123,13 @@ Indoor Growing Systems Survey for Blue Ocean Strategy analysis. Deployed at: htt
 - Tests both Tier 1 and Satisfied paths in parallel
 - `test-reset-behavior.js` - Tests survey reset, cache clearing, and path switching
 - `test-progress-bar.js` - Tests progress bar progression
+- `test-debug-logging.js` - Tests debug logging system (43 logs captured in typical flow)
 - Local server runs on http://localhost:8080
+
+### Planning
+- `PLANNING.md` - Comprehensive planning document for future survey changes
+- Sections: Question modifications, Flow changes, Data collection, UI/UX improvements
+- Includes priority levels and questions for discussion
 
 ## Important Notes
 
