@@ -1540,6 +1540,11 @@
                 maxProgressReached = progress;
             }
 
+            // Debug log progress updates
+            if (DEBUG) {
+                console.log(`📈 Progress Update: ${currentStep}/${totalSteps} = ${progress.toFixed(2)}% (max: ${maxProgressReached.toFixed(2)}%)`);
+            }
+
             document.getElementById('progressBar').style.width = Math.min(maxProgressReached, 100) + '%';
         }
 
