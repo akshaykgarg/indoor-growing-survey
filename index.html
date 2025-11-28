@@ -55,6 +55,22 @@
             margin-bottom: 20px;
         }
 
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
         .question-section {
             display: none;
             animation: slideIn 0.4s ease;
@@ -432,6 +448,10 @@
             <h1>🌱 Indoor Growing Systems Survey</h1>
         </div>
 
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
         <div id="content">
             <!-- Sections will be dynamically inserted here -->
         </div>
@@ -462,6 +482,63 @@
         // Debug logging system
         const DEBUG = true; // Set to false to disable all debug logs
 
+        // ===== PROGRESS BAR MODULE =====
+        /**
+         * Dynamic Progress Bar - calculates progress based on remaining questions
+         * Each question takes an equal portion of the REMAINING progress bar
+         */
+        class ProgressBarModule {
+            constructor(barElementId, debug = false) {
+                this.barElement = document.getElementById(barElementId);
+                this.currentProgress = 0;
+                this.questionsAnswered = 0;
+                this.debug = debug;
+                if (this.debug) console.log('🎨 Progress Bar Module initialized');
+            }
+
+            updateProgress(questionsRemaining) {
+                if (questionsRemaining <= 0) {
+                    this.currentProgress = 100;
+                } else {
+                    const remainingProgress = 100 - this.currentProgress;
+                    const progressIncrement = remainingProgress / questionsRemaining;
+                    this.currentProgress += progressIncrement;
+                    this.currentProgress = Math.min(this.currentProgress, 100);
+                }
+
+                this.questionsAnswered++;
+                this.render();
+
+                if (this.debug) {
+                    console.log(`📊 Progress:`, {
+                        answered: this.questionsAnswered,
+                        remaining: questionsRemaining,
+                        current: this.currentProgress.toFixed(2) + '%'
+                    });
+                }
+            }
+
+            render() {
+                if (this.barElement) {
+                    this.barElement.style.width = this.currentProgress.toFixed(2) + '%';
+                }
+            }
+
+            reset() {
+                this.currentProgress = 0;
+                this.questionsAnswered = 0;
+                this.render();
+                if (this.debug) console.log('🔄 Progress Bar Reset');
+            }
+
+            getProgress() {
+                return this.currentProgress;
+            }
+        }
+
+        // Initialize progress bar
+        const progressBar = new ProgressBarModule('progressBar', DEBUG);
+        // ===== END PROGRESS BAR MODULE =====
         const debugLog = {
             navigation: (action, fromSection, toSection) => {
                 if (!DEBUG) return;
@@ -1492,6 +1569,11 @@
         function renderSection(section) {
             document.getElementById('content').innerHTML = section.html;
 
+            // Calculate how many questions remain AFTER current question
+            // When on completion screen (last section), questionsRemaining = 0 → progress = 100%
+            const questionsRemaining = sections.length - currentStep - 1;
+            progressBar.updateProgress(questionsRemaining);
+
             // Initialize sliders if on competing factors page
             if (section.id === 'competing_factors') {
                 // Sliders are already initialized in HTML with default value of 5
@@ -1569,9 +1651,11 @@
 
             // Reset progress
             currentStep = 0;
+            progressBar.reset();
 
             console.log('✅ RESET COMPLETE - After:', {
-                sections: sections.length
+                sections: sections.length,
+                progress: progressBar.getProgress() + '%'
             });
         }
 
