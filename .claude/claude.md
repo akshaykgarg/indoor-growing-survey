@@ -39,9 +39,11 @@ Indoor Growing Systems Survey for Blue Ocean Strategy analysis. Deployed at: htt
 
 ### 3. Progress Bar Fix
 - Fixed to only move forward, never backward
-- Set fixed `totalSteps = 30` for smooth proportional progression
+- Set fixed `totalSteps = 30` throughout entire survey (never changes)
 - Added `maxProgressReached` tracking to prevent bar regression
-- Progress increases consistently ~3.33% per question
+- Progress increases smoothly ~3.33% per question
+- Removed dynamic totalSteps updates that caused jumps
+- Tested: 30% → 33% → 36% → 40% (no backward movement)
 
 ### 4. Income Values
 - Changed from annual to monthly (per month)
