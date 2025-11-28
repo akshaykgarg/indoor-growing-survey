@@ -117,8 +117,16 @@ Indoor Growing Systems Survey for Blue Ocean Strategy analysis. Deployed at: htt
 
 ### Google Sheets Integration
 - Script URL: https://script.google.com/macros/s/AKfycbx2WUXxwR7LWg3QWjEO1yIv4JT5BD2SvOq-LDL3N6BYsl3xODVPawBP-wlYftSUigNt_Q/exec
-- 55 columns total
-- T3 Interest field (column 198) is empty/removed but kept for compatibility
+- 54 total columns:
+  - 8 metadata (timestamp, age, ownership, usage, satisfaction, awareness, tier, currency)
+  - 6 Satisfied questions
+  - 10 Tier 1 questions
+  - 6 Tier 2 questions
+  - 9 Tier 3 questions (includes blank column for removed interest question)
+  - 6 Competing Factors (1-10 sliders)
+  - 6 Demographics
+  - 3 Metadata tracking (start/end time, navigation path)
+- T3 Interest field kept blank for backward compatibility
 
 ### Testing
 - Playwright tests available in `test-all-paths-parallel.js`

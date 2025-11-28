@@ -10,7 +10,31 @@
  * - Time & Effort scale reversed: 10 = low effort, 1 = high effort
  * - All multi-select questions have prominent "Select ALL that apply" labels
  * - Back button navigation added to ALL questions (including auto-advance)
- * - Progress bar only moves forward, never backward
+ * - Progress bar only moves forward, never backward (fixed totalSteps = 30)
+ * - Survey data reset functionality for retakes in same browser tab
+ * - Comprehensive debug logging system (set DEBUG = false in production)
+ * - T3-Q1 "Interest" question removed (column kept blank for compatibility)
+ * - T3 likelihood and price questions split into separate screens
+ *
+ * DATA STRUCTURE:
+ * - 54 total columns broken down as:
+ *   - 8 metadata fields (timestamp, age, ownership, usage, satisfaction, awareness, tier, currency)
+ *   - 6 Satisfied customer questions
+ *   - 10 Tier 1 (Fed Up) questions
+ *   - 6 Tier 2 (Refusing) questions
+ *   - 9 Tier 3 (Unexplored) questions (includes 1 blank for removed interest question)
+ *   - 6 Competing Factors ratings (1-10 sliders)
+ *   - 6 Demographics fields
+ *   - 3 Metadata tracking (start time, completed time, navigation path)
+ * - Tier-specific questions only populated for that tier's path
+ * - Competing factors only for Tier 1 and Satisfied customers (blank for Tier 2/3)
+ * - Demographics collected from all respondents
+ *
+ * TIER PATHS:
+ * - TIER1 (Fed Up): Own + Minimal use + Dissatisfied → 10 questions
+ * - SATISFIED: Own + Active use OR Satisfied → 6 questions
+ * - TIER2 (Refusing): Don't own + Aware → 6 questions
+ * - TIER3 (Unexplored): Don't own + Not aware → 8 questions
  *
  * SETUP INSTRUCTIONS:
  * 1. Open your Google Sheet
@@ -25,7 +49,7 @@
  * 10. Who has access: "Anyone"
  * 11. Click "Deploy" and authorize
  * 12. Copy the Web App URL
- * 13. Replace 'YOUR_GOOGLE_SHEETS_SCRIPT_URL_HERE' in index.html with your URL
+ * 13. Update SCRIPT_URL in index.html with your deployment URL
  */
 
 function doPost(e) {
