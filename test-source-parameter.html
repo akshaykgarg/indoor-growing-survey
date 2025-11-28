@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Source Parameter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .result {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #4CAF50;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .error {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Source URL Parameter</h1>
+
+    <div class="test-section">
+        <h2>Current URL Test</h2>
+        <p>Current URL: <code id="currentUrl"></code></p>
+        <div id="urlTest" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Different Sources</h2>
+        <p>Open these URLs to test:</p>
+        <button onclick="testSource('students')">Test: students</button>
+        <button onclick="testSource('email')">Test: email</button>
+        <button onclick="testSource('instagram')">Test: instagram</button>
+        <button onclick="testSource('dubai')">Test: dubai</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Google Sheets Test</h2>
+        <p>Test if data can be sent to Google Sheets:</p>
+        <button onclick="testGoogleSheets()">Test Submit to Sheets</button>
+        <div id="sheetsResult" class="result"></div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbysMQxwOk-4FWG_NTdV3OcDGv-i8JT-HBtQaPYmwqrYmxBdR2o4louMBw8M3CMQYm4j/exec';
+
+        // Test URL parameter extraction
+        function getURLParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name) || '';
+        }
+
+        // Display current URL test
+        document.getElementById('currentUrl').textContent = window.location.href;
+        const source = getURLParameter('source') || 'direct';
+        document.getElementById('urlTest').innerHTML = `
+            <strong>Source Parameter:</strong> <code>${source}</code><br>
+            ${source === 'direct' ?
+                '<span style="color: orange;">⚠️ No source parameter found. Try adding ?source=test to the URL</span>' :
+                '<span style="color: green;">✅ Source parameter detected!</span>'}
+        `;
+
+        // Test different sources
+        function testSource(sourceValue) {
+            const baseUrl = window.location.origin + window.location.pathname;
+            window.location.href = `${baseUrl}?source=${sourceValue}`;
+        }
+
+        // Test Google Sheets submission
+        async function testGoogleSheets() {
+            const resultDiv = document.getElementById('sheetsResult');
+            resultDiv.innerHTML = '<em>Testing... Please wait...</em>';
+
+            const testData = {
+                startTime: new Date().toISOString(),
+                completedAt: new Date().toISOString(),
+                age: '25-34',
+                ownership: 'yes',
+                customerTier: 'TIER1',
+                usage: 'daily',
+                satisfaction: 'satisfied',
+                awareness: '',
+                currency: 'USD',
+                source: getURLParameter('source') || 'test-submission',
+                responses: {
+                    gender: 'Male',
+                    income: '$6,300 - $10,400/month',
+                    family: 'Single',
+                    living: 'Apartment - Rent',
+                    location: 'Urban - City center'
+                },
+                multiSelect: {
+                    demo_psycho: ['Health-conscious', 'Tech-savvy']
+                },
+                ratings: {
+                    price: 8,
+                    ease: 7,
+                    quality: 9,
+                    time: 6,
+                    space: 8,
+                    automation: 9
+                },
+                navigationPath: ['welcome', 'age', 'gender']
+            };
+
+            try {
+                console.log('Sending test data:', testData);
+
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+
+                // Note: mode: 'no-cors' means we won't get a readable response
+                resultDiv.innerHTML = `
+                    <strong style="color: green;">✅ Request Sent Successfully!</strong><br>
+                    <em>Note: With 'no-cors' mode, we can't verify the server response.</em><br>
+                    <strong>What to check:</strong><br>
+                    1. Open your Google Sheet<br>
+                    2. Look for a new row with source: <code>${testData.source}</code><br>
+                    3. If you see it, the integration is working!<br><br>
+                    <strong>Test Data Sent:</strong><br>
+                    <pre>${JSON.stringify(testData, null, 2)}</pre>
+                `;
+
+            } catch (error) {
+                console.error('Error:', error);
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <strong style="color: red;">❌ Error Sending Request</strong><br>
+                    Error: ${error.message}<br><br>
+                    <strong>Troubleshooting:</strong><br>
+                    1. Check if the Google Apps Script URL is correct<br>
+                    2. Make sure the script is deployed as a web app<br>
+                    3. Verify the deployment settings (Execute as: Me, Access: Anyone)
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
